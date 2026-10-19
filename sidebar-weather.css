@@ -1,0 +1,22 @@
+/* Travel Planner V6.10 : navigation verticale et météo */
+@media (min-width: 900px){
+ body{padding-left:232px}
+ header{position:relative;padding:16px 24px}
+ nav.tabs{position:fixed;left:0;top:0;bottom:0;width:232px;z-index:1000;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;gap:8px;padding:22px 12px;background:#173858;box-shadow:2px 0 18px #0002;overflow-y:auto}
+ nav.tabs::before{content:"✈ Travel Planner";display:block;color:#fff;font-size:19px;font-weight:800;margin:5px 7px 20px}
+ nav.tabs button{text-align:left;white-space:normal;padding:12px 14px;background:#254b6b;color:#f0f7ff;border-radius:9px}
+ nav.tabs button:hover{background:#35678f}
+ nav.tabs button.active{background:#1980c5;color:#fff}
+ main{max-width:1600px;margin:18px auto;padding:0 18px}
+}
+@media (max-width:899px){nav.tabs{position:sticky;top:0;z-index:1000;overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start}nav.tabs button{flex:0 0 auto}}
+.tp-weather{border:1px solid #cbddeb;background:#f5f9fd;border-radius:14px;padding:16px;margin:18px 0}
+.tp-weather-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tp-weather-head h3{font-size:17px;color:#0b547f}
+.tp-weather-head .hint{margin:4px 0}
+.tp-weather-days{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:9px;margin:12px 0}
+.tp-weather-day{background:#fff;border:1px solid #dbe5ef;border-radius:11px;padding:11px;display:flex;flex-direction:column;gap:5px}
+.tp-weather-day strong{font-size:13px}
+.tp-weather-day .tp-weather-icon{font-size:24px}
+.tp-weather-day .tp-weather-temps{font-weight:700}
+.tp-weather-day small{color:#51677a}

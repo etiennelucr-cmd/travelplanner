@@ -1,0 +1,3321 @@
+{
+  "rouen": [
+    {
+      "type": "node",
+      "lat": 49.4402,
+      "lon": 1.0947,
+      "tags": {
+        "name": "Cathédrale Notre-Dame de Rouen",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.441,
+      "lon": 1.0915,
+      "tags": {
+        "name": "Gros-Horloge",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.4431,
+      "lon": 1.0883,
+      "tags": {
+        "name": "Place du Vieux-Marché",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.4432,
+      "lon": 1.099,
+      "tags": {
+        "name": "Abbatiale Saint-Ouen",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.4397,
+      "lon": 1.0994,
+      "tags": {
+        "name": "Église Saint-Maclou",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "strasbourg": [
+    {
+      "type": "node",
+      "lat": 48.5818,
+      "lon": 7.7507,
+      "tags": {
+        "name": "Cathédrale Notre-Dame",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.582,
+      "lon": 7.7499,
+      "tags": {
+        "name": "Maison Kammerzell",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.58,
+      "lon": 7.742,
+      "tags": {
+        "name": "Petite France",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.579,
+      "lon": 7.7385,
+      "tags": {
+        "name": "Barrage Vauban",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.5812,
+      "lon": 7.7522,
+      "tags": {
+        "name": "Palais Rohan",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "paris": [
+    {
+      "type": "node",
+      "lat": 48.853,
+      "lon": 2.3499,
+      "tags": {
+        "name": "Cathédrale Notre-Dame",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8554,
+      "lon": 2.345,
+      "tags": {
+        "name": "Sainte-Chapelle",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8606,
+      "lon": 2.3376,
+      "tags": {
+        "name": "Musée du Louvre",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8635,
+      "lon": 2.3275,
+      "tags": {
+        "name": "Jardin des Tuileries",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8584,
+      "lon": 2.2945,
+      "tags": {
+        "name": "Tour Eiffel",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8738,
+      "lon": 2.295,
+      "tags": {
+        "name": "Arc de Triomphe",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8867,
+      "lon": 2.3431,
+      "tags": {
+        "name": "Basilique du Sacré-Cœur",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8865,
+      "lon": 2.3408,
+      "tags": {
+        "name": "Place du Tertre",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.86,
+      "lon": 2.3266,
+      "tags": {
+        "name": "Musée d’Orsay",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8638,
+      "lon": 2.3227,
+      "tags": {
+        "name": "Musée de l’Orangerie",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8606,
+      "lon": 2.3522,
+      "tags": {
+        "name": "Centre Pompidou",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8462,
+      "lon": 2.3464,
+      "tags": {
+        "name": "Panthéon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8462,
+      "lon": 2.3372,
+      "tags": {
+        "name": "Jardin du Luxembourg",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8485,
+      "lon": 2.3375,
+      "tags": {
+        "name": "Palais du Luxembourg",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8656,
+      "lon": 2.3212,
+      "tags": {
+        "name": "Place de la Concorde",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8719,
+      "lon": 2.3316,
+      "tags": {
+        "name": "Opéra Garnier",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8675,
+      "lon": 2.329,
+      "tags": {
+        "name": "Place Vendôme",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8644,
+      "lon": 2.3371,
+      "tags": {
+        "name": "Palais Royal et ses jardins",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8637,
+      "lon": 2.3136,
+      "tags": {
+        "name": "Pont Alexandre III",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8558,
+      "lon": 2.3126,
+      "tags": {
+        "name": "Hôtel des Invalides",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8556,
+      "lon": 2.2986,
+      "tags": {
+        "name": "Champ-de-Mars",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8628,
+      "lon": 2.2875,
+      "tags": {
+        "name": "Trocadéro",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8516,
+      "lon": 2.3564,
+      "tags": {
+        "name": "Île Saint-Louis",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8555,
+      "lon": 2.3655,
+      "tags": {
+        "name": "Place des Vosges",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8548,
+      "lon": 2.3662,
+      "tags": {
+        "name": "Maison de Victor Hugo",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8575,
+      "lon": 2.3622,
+      "tags": {
+        "name": "Musée Carnavalet",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8566,
+      "lon": 2.3522,
+      "tags": {
+        "name": "Hôtel de Ville de Paris",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8558,
+      "lon": 2.345,
+      "tags": {
+        "name": "Conciergerie",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8571,
+      "lon": 2.3412,
+      "tags": {
+        "name": "Pont Neuf",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8439,
+      "lon": 2.3597,
+      "tags": {
+        "name": "Jardin des Plantes",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8429,
+      "lon": 2.3563,
+      "tags": {
+        "name": "Grande Galerie de l’Évolution",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.845,
+      "lon": 2.3522,
+      "tags": {
+        "name": "Arènes de Lutèce",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8491,
+      "lon": 2.3563,
+      "tags": {
+        "name": "Institut du Monde Arabe",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8338,
+      "lon": 2.3324,
+      "tags": {
+        "name": "Catacombes de Paris",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8614,
+      "lon": 2.3933,
+      "tags": {
+        "name": "Cimetière du Père-Lachaise",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8717,
+      "lon": 2.365,
+      "tags": {
+        "name": "Canal Saint-Martin",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8809,
+      "lon": 2.3828,
+      "tags": {
+        "name": "Parc des Buttes-Chaumont",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8945,
+      "lon": 2.3876,
+      "tags": {
+        "name": "La Villette",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8599,
+      "lon": 2.362,
+      "tags": {
+        "name": "Musée Picasso",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8554,
+      "lon": 2.3158,
+      "tags": {
+        "name": "Musée Rodin",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.866,
+      "lon": 2.3146,
+      "tags": {
+        "name": "Petit Palais",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8661,
+      "lon": 2.3125,
+      "tags": {
+        "name": "Grand Palais",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8509,
+      "lon": 2.333,
+      "tags": {
+        "name": "Église Saint-Sulpice",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.8634,
+      "lon": 2.3451,
+      "tags": {
+        "name": "Église Saint-Eustache",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 48.867,
+      "lon": 2.337,
+      "tags": {
+        "name": "Bibliothèque nationale Richelieu",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "lyon": [
+    {
+      "type": "node",
+      "lat": 45.7578,
+      "lon": 4.832,
+      "tags": {
+        "name": "Place Bellecour",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.762,
+      "lon": 4.827,
+      "tags": {
+        "name": "Vieux Lyon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.7607,
+      "lon": 4.8267,
+      "tags": {
+        "name": "Cathédrale Saint-Jean",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.7622,
+      "lon": 4.8226,
+      "tags": {
+        "name": "Basilique de Fourvière",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.7586,
+      "lon": 4.8194,
+      "tags": {
+        "name": "Théâtres romains",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "nantes": [
+    {
+      "type": "node",
+      "lat": 47.2165,
+      "lon": -1.549,
+      "tags": {
+        "name": "Château des ducs de Bretagne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 47.2182,
+      "lon": -1.5506,
+      "tags": {
+        "name": "Cathédrale Saint-Pierre-et-Saint-Paul",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 47.2138,
+      "lon": -1.5596,
+      "tags": {
+        "name": "Passage Pommeraye",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 47.2065,
+      "lon": -1.5645,
+      "tags": {
+        "name": "Machines de l’île",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "bordeaux": [
+    {
+      "type": "node",
+      "lat": 44.8417,
+      "lon": -0.5694,
+      "tags": {
+        "name": "Place de la Bourse",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 44.8416,
+      "lon": -0.5687,
+      "tags": {
+        "name": "Miroir d’eau",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 44.8348,
+      "lon": -0.5718,
+      "tags": {
+        "name": "Grosse Cloche",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 44.8379,
+      "lon": -0.5776,
+      "tags": {
+        "name": "Cathédrale Saint-André",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "marseille": [
+    {
+      "type": "node",
+      "lat": 43.2951,
+      "lon": 5.3741,
+      "tags": {
+        "name": "Vieux-Port",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 43.3005,
+      "lon": 5.3664,
+      "tags": {
+        "name": "Le Panier",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 43.2995,
+      "lon": 5.3642,
+      "tags": {
+        "name": "Cathédrale de la Major",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 43.284,
+      "lon": 5.3711,
+      "tags": {
+        "name": "Notre-Dame de la Garde",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "bruxelles": [
+    {
+      "type": "node",
+      "lat": 50.8467,
+      "lon": 4.3525,
+      "tags": {
+        "name": "Grand-Place",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8484,
+      "lon": 4.3547,
+      "tags": {
+        "name": "Galeries royales Saint-Hubert",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8449,
+      "lon": 4.3499,
+      "tags": {
+        "name": "Manneken-Pis",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8438,
+      "lon": 4.3561,
+      "tags": {
+        "name": "Mont des Arts",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8949,
+      "lon": 4.3416,
+      "tags": {
+        "name": "Atomium",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8418,
+      "lon": 4.3923,
+      "tags": {
+        "name": "Parc du Cinquantenaire",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8405,
+      "lon": 4.3924,
+      "tags": {
+        "name": "Arcades du Cinquantenaire",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8417,
+      "lon": 4.3584,
+      "tags": {
+        "name": "Musées royaux des Beaux-Arts",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.842,
+      "lon": 4.3582,
+      "tags": {
+        "name": "Musée Magritte",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8419,
+      "lon": 4.3623,
+      "tags": {
+        "name": "Palais royal de Bruxelles",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8443,
+      "lon": 4.3636,
+      "tags": {
+        "name": "Parc de Bruxelles",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8478,
+      "lon": 4.3601,
+      "tags": {
+        "name": "Cathédrale Saints-Michel-et-Gudule",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8514,
+      "lon": 4.3472,
+      "tags": {
+        "name": "Place Sainte-Catherine",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8478,
+      "lon": 4.3502,
+      "tags": {
+        "name": "Bourse de Bruxelles",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8486,
+      "lon": 4.3545,
+      "tags": {
+        "name": "Jeanneke-Pis",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8369,
+      "lon": 4.3516,
+      "tags": {
+        "name": "Palais de Justice",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8404,
+      "lon": 4.355,
+      "tags": {
+        "name": "Place du Grand Sablon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8394,
+      "lon": 4.3571,
+      "tags": {
+        "name": "Église Notre-Dame du Sablon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8427,
+      "lon": 4.3593,
+      "tags": {
+        "name": "Musée des Instruments de Musique",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.851,
+      "lon": 4.36,
+      "tags": {
+        "name": "Centre belge de la bande dessinée",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8421,
+      "lon": 4.3621,
+      "tags": {
+        "name": "Musée BELvue",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.889,
+      "lon": 4.35,
+      "tags": {
+        "name": "Parc de Laeken",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8882,
+      "lon": 4.3597,
+      "tags": {
+        "name": "Serres royales de Laeken",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8941,
+      "lon": 4.339,
+      "tags": {
+        "name": "Mini-Europe",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8469,
+      "lon": 4.3524,
+      "tags": {
+        "name": "Maison du Roi / Musée de la Ville",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.8388,
+      "lon": 4.375,
+      "tags": {
+        "name": "Quartier européen",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "lille": [
+    {
+      "type": "node",
+      "lat": 50.6366,
+      "lon": 3.0635,
+      "tags": {
+        "name": "Grand-Place",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.637,
+      "lon": 3.0645,
+      "tags": {
+        "name": "Vieille Bourse",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.64,
+      "lon": 3.0621,
+      "tags": {
+        "name": "Cathédrale Notre-Dame-de-la-Treille",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.6405,
+      "lon": 3.044,
+      "tags": {
+        "name": "Citadelle de Lille",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "annecy": [
+    {
+      "type": "node",
+      "lat": 45.8984,
+      "lon": 6.126,
+      "tags": {
+        "name": "Palais de l’Île",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.8979,
+      "lon": 6.1245,
+      "tags": {
+        "name": "Château d’Annecy",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.9006,
+      "lon": 6.1304,
+      "tags": {
+        "name": "Pont des Amours",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 45.8993,
+      "lon": 6.1305,
+      "tags": {
+        "name": "Jardins de l’Europe",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "dijon": [
+    {
+      "type": "node",
+      "lat": 47.3217,
+      "lon": 5.041,
+      "tags": {
+        "name": "Palais des ducs de Bourgogne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 47.3224,
+      "lon": 5.0404,
+      "tags": {
+        "name": "Église Notre-Dame",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 47.3213,
+      "lon": 5.0391,
+      "tags": {
+        "name": "Place François-Rude",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 47.3193,
+      "lon": 5.0366,
+      "tags": {
+        "name": "Cathédrale Saint-Bénigne",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "reims": [
+    {
+      "type": "node",
+      "lat": 49.2538,
+      "lon": 4.0347,
+      "tags": {
+        "name": "Cathédrale Notre-Dame de Reims",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.253,
+      "lon": 4.0365,
+      "tags": {
+        "name": "Palais du Tau",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.2565,
+      "lon": 4.0279,
+      "tags": {
+        "name": "Place Drouet-d’Erlon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 49.2621,
+      "lon": 4.0313,
+      "tags": {
+        "name": "Porte de Mars",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "bruges": [
+    {
+      "type": "node",
+      "lat": 51.2089,
+      "lon": 3.2247,
+      "tags": {
+        "name": "Grand-Place (Markt)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2081,
+      "lon": 3.2244,
+      "tags": {
+        "name": "Beffroi de Bruges",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2084,
+      "lon": 3.2275,
+      "tags": {
+        "name": "Burg",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2014,
+      "lon": 3.2257,
+      "tags": {
+        "name": "Béguinage",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "rome": [
+    {
+      "type": "node",
+      "lat": 41.8902,
+      "lon": 12.4922,
+      "tags": {
+        "name": "Colisée",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 41.8925,
+      "lon": 12.4853,
+      "tags": {
+        "name": "Forum romain",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 41.9009,
+      "lon": 12.4833,
+      "tags": {
+        "name": "Fontaine de Trevi",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 41.8986,
+      "lon": 12.4769,
+      "tags": {
+        "name": "Panthéon",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "amsterdam": [
+    {
+      "type": "node",
+      "lat": 52.3731,
+      "lon": 4.8932,
+      "tags": {
+        "name": "Place du Dam",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.373,
+      "lon": 4.8919,
+      "tags": {
+        "name": "Palais royal",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.3752,
+      "lon": 4.884,
+      "tags": {
+        "name": "Maison Anne Frank",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.36,
+      "lon": 4.8852,
+      "tags": {
+        "name": "Rijksmuseum",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "aachen": [
+    {
+      "type": "node",
+      "lat": 50.7747,
+      "lon": 6.0839,
+      "tags": {
+        "name": "Cathédrale d’Aix-la-Chapelle",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7762,
+      "lon": 6.0838,
+      "tags": {
+        "name": "Hôtel de ville (Rathaus)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7761,
+      "lon": 6.0844,
+      "tags": {
+        "name": "Place du marché (Markt)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7744,
+      "lon": 6.0864,
+      "tags": {
+        "name": "Fontaine d’Élise (Elisenbrunnen)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7755,
+      "lon": 6.0856,
+      "tags": {
+        "name": "Musée Couven",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7755,
+      "lon": 6.0829,
+      "tags": {
+        "name": "Centre Charlemagne",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7803,
+      "lon": 6.0782,
+      "tags": {
+        "name": "Porte Ponttor",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7689,
+      "lon": 6.0894,
+      "tags": {
+        "name": "Porte Marschiertor",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7725,
+      "lon": 6.0857,
+      "tags": {
+        "name": "Théâtre d’Aix-la-Chapelle",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "aix-la-chapelle": [
+    {
+      "type": "node",
+      "lat": 50.7747,
+      "lon": 6.0839,
+      "tags": {
+        "name": "Cathédrale d’Aix-la-Chapelle",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7762,
+      "lon": 6.0838,
+      "tags": {
+        "name": "Hôtel de ville (Rathaus)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7761,
+      "lon": 6.0844,
+      "tags": {
+        "name": "Place du marché (Markt)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7744,
+      "lon": 6.0864,
+      "tags": {
+        "name": "Fontaine d’Élise (Elisenbrunnen)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7755,
+      "lon": 6.0856,
+      "tags": {
+        "name": "Musée Couven",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7755,
+      "lon": 6.0829,
+      "tags": {
+        "name": "Centre Charlemagne",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7803,
+      "lon": 6.0782,
+      "tags": {
+        "name": "Porte Ponttor",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7689,
+      "lon": 6.0894,
+      "tags": {
+        "name": "Porte Marschiertor",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7725,
+      "lon": 6.0857,
+      "tags": {
+        "name": "Théâtre d’Aix-la-Chapelle",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "aix la chapelle": [
+    {
+      "type": "node",
+      "lat": 50.7747,
+      "lon": 6.0839,
+      "tags": {
+        "name": "Cathédrale d’Aix-la-Chapelle",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7762,
+      "lon": 6.0838,
+      "tags": {
+        "name": "Hôtel de ville (Rathaus)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7761,
+      "lon": 6.0844,
+      "tags": {
+        "name": "Place du marché (Markt)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7744,
+      "lon": 6.0864,
+      "tags": {
+        "name": "Fontaine d’Élise (Elisenbrunnen)",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7755,
+      "lon": 6.0856,
+      "tags": {
+        "name": "Musée Couven",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7755,
+      "lon": 6.0829,
+      "tags": {
+        "name": "Centre Charlemagne",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7803,
+      "lon": 6.0782,
+      "tags": {
+        "name": "Porte Ponttor",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7689,
+      "lon": 6.0894,
+      "tags": {
+        "name": "Porte Marschiertor",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.7725,
+      "lon": 6.0857,
+      "tags": {
+        "name": "Théâtre d’Aix-la-Chapelle",
+        "tourism": "attraction"
+      }
+    }
+  ],
+  "berlin": [
+    {
+      "type": "node",
+      "lat": 52.5163,
+      "lon": 13.3777,
+      "tags": {
+        "name": "Porte de Brandebourg",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5186,
+      "lon": 13.3762,
+      "tags": {
+        "name": "Reichstag",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5139,
+      "lon": 13.3787,
+      "tags": {
+        "name": "Mémorial de l’Holocauste",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.52,
+      "lon": 13.401,
+      "tags": {
+        "name": "Île aux Musées",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5212,
+      "lon": 13.3969,
+      "tags": {
+        "name": "Pergamonmuseum",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5201,
+      "lon": 13.3978,
+      "tags": {
+        "name": "Neues Museum",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5195,
+      "lon": 13.3987,
+      "tags": {
+        "name": "Altes Museum",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5191,
+      "lon": 13.401,
+      "tags": {
+        "name": "Cathédrale de Berlin",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5219,
+      "lon": 13.4132,
+      "tags": {
+        "name": "Alexanderplatz",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5208,
+      "lon": 13.4094,
+      "tags": {
+        "name": "Tour de télévision",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.505,
+      "lon": 13.4395,
+      "tags": {
+        "name": "East Side Gallery",
+        "tourism": "gallery"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5075,
+      "lon": 13.3904,
+      "tags": {
+        "name": "Checkpoint Charlie",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5065,
+      "lon": 13.3838,
+      "tags": {
+        "name": "Topographie de la Terreur",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5136,
+      "lon": 13.3925,
+      "tags": {
+        "name": "Gendarmenmarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5136,
+      "lon": 13.3919,
+      "tags": {
+        "name": "Konzerthaus",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5208,
+      "lon": 13.2957,
+      "tags": {
+        "name": "Palais de Charlottenburg",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5147,
+      "lon": 13.3501,
+      "tags": {
+        "name": "Tiergarten",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5145,
+      "lon": 13.3501,
+      "tags": {
+        "name": "Colonne de la Victoire",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5096,
+      "lon": 13.376,
+      "tags": {
+        "name": "Potsdamer Platz",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5024,
+      "lon": 13.3957,
+      "tags": {
+        "name": "Musée juif",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5169,
+      "lon": 13.4073,
+      "tags": {
+        "name": "Nikolaiviertel",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5242,
+      "lon": 13.4024,
+      "tags": {
+        "name": "Hackesche Höfe",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5432,
+      "lon": 13.4027,
+      "tags": {
+        "name": "Mauerpark",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.535,
+      "lon": 13.3903,
+      "tags": {
+        "name": "Gedenkstätte Berliner Mauer",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.473,
+      "lon": 13.403,
+      "tags": {
+        "name": "Tempelhofer Feld",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5163,
+      "lon": 13.3931,
+      "tags": {
+        "name": "Bebelplatz",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.5165,
+      "lon": 13.3887,
+      "tags": {
+        "name": "Unter den Linden",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 52.517,
+      "lon": 13.402,
+      "tags": {
+        "name": "Humboldt Forum",
+        "tourism": "museum"
+      }
+    }
+  ],
+  "ostende": [
+    {
+      "type": "node",
+      "lat": 51.2344,
+      "lon": 2.9145,
+      "tags": {
+        "name": "Plage d’Ostende",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.234,
+      "lon": 2.912,
+      "tags": {
+        "name": "Promenade Albert I",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2319,
+      "lon": 2.9125,
+      "tags": {
+        "name": "Casino-Kursaal",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2276,
+      "lon": 2.9248,
+      "tags": {
+        "name": "Église Saint-Pierre-et-Saint-Paul",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2261,
+      "lon": 2.9194,
+      "tags": {
+        "name": "Mercator",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2253,
+      "lon": 2.9154,
+      "tags": {
+        "name": "Mu.ZEE",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2413,
+      "lon": 2.9363,
+      "tags": {
+        "name": "Fort Napoléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2281,
+      "lon": 2.9134,
+      "tags": {
+        "name": "Parc Léopold",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2187,
+      "lon": 2.9283,
+      "tags": {
+        "name": "Parc Maria Hendrika",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2054,
+      "lon": 2.861,
+      "tags": {
+        "name": "Atlantikwall Raversyde",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.233,
+      "lon": 2.9186,
+      "tags": {
+        "name": "Maison James Ensor",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.232,
+      "lon": 2.929,
+      "tags": {
+        "name": "Port d’Ostende",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2311,
+      "lon": 2.926,
+      "tags": {
+        "name": "Visserskaai",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2236,
+      "lon": 2.8974,
+      "tags": {
+        "name": "Wellington Hippodrome",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2255,
+      "lon": 2.9038,
+      "tags": {
+        "name": "Jardin japonais Shin Kai Tei",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.23,
+      "lon": 2.9174,
+      "tags": {
+        "name": "De Grote Post",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2312,
+      "lon": 2.9206,
+      "tags": {
+        "name": "Place Wapenplein",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2419,
+      "lon": 2.932,
+      "tags": {
+        "name": "Phare Lange Nelle",
+        "tourism": "viewpoint"
+      }
+    }
+  ],
+  "oostende": [
+    {
+      "type": "node",
+      "lat": 51.2344,
+      "lon": 2.9145,
+      "tags": {
+        "name": "Plage d’Ostende",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.234,
+      "lon": 2.912,
+      "tags": {
+        "name": "Promenade Albert I",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2319,
+      "lon": 2.9125,
+      "tags": {
+        "name": "Casino-Kursaal",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2276,
+      "lon": 2.9248,
+      "tags": {
+        "name": "Église Saint-Pierre-et-Saint-Paul",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2261,
+      "lon": 2.9194,
+      "tags": {
+        "name": "Mercator",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2253,
+      "lon": 2.9154,
+      "tags": {
+        "name": "Mu.ZEE",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2413,
+      "lon": 2.9363,
+      "tags": {
+        "name": "Fort Napoléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2281,
+      "lon": 2.9134,
+      "tags": {
+        "name": "Parc Léopold",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2187,
+      "lon": 2.9283,
+      "tags": {
+        "name": "Parc Maria Hendrika",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2054,
+      "lon": 2.861,
+      "tags": {
+        "name": "Atlantikwall Raversyde",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.233,
+      "lon": 2.9186,
+      "tags": {
+        "name": "Maison James Ensor",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.232,
+      "lon": 2.929,
+      "tags": {
+        "name": "Port d’Ostende",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2311,
+      "lon": 2.926,
+      "tags": {
+        "name": "Visserskaai",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2236,
+      "lon": 2.8974,
+      "tags": {
+        "name": "Wellington Hippodrome",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2255,
+      "lon": 2.9038,
+      "tags": {
+        "name": "Jardin japonais Shin Kai Tei",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.23,
+      "lon": 2.9174,
+      "tags": {
+        "name": "De Grote Post",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2312,
+      "lon": 2.9206,
+      "tags": {
+        "name": "Place Wapenplein",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2419,
+      "lon": 2.932,
+      "tags": {
+        "name": "Phare Lange Nelle",
+        "tourism": "viewpoint"
+      }
+    }
+  ],
+  "ostend": [
+    {
+      "type": "node",
+      "lat": 51.2344,
+      "lon": 2.9145,
+      "tags": {
+        "name": "Plage d’Ostende",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.234,
+      "lon": 2.912,
+      "tags": {
+        "name": "Promenade Albert I",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2319,
+      "lon": 2.9125,
+      "tags": {
+        "name": "Casino-Kursaal",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2276,
+      "lon": 2.9248,
+      "tags": {
+        "name": "Église Saint-Pierre-et-Saint-Paul",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2261,
+      "lon": 2.9194,
+      "tags": {
+        "name": "Mercator",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2253,
+      "lon": 2.9154,
+      "tags": {
+        "name": "Mu.ZEE",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2413,
+      "lon": 2.9363,
+      "tags": {
+        "name": "Fort Napoléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2281,
+      "lon": 2.9134,
+      "tags": {
+        "name": "Parc Léopold",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2187,
+      "lon": 2.9283,
+      "tags": {
+        "name": "Parc Maria Hendrika",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2054,
+      "lon": 2.861,
+      "tags": {
+        "name": "Atlantikwall Raversyde",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.233,
+      "lon": 2.9186,
+      "tags": {
+        "name": "Maison James Ensor",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.232,
+      "lon": 2.929,
+      "tags": {
+        "name": "Port d’Ostende",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2311,
+      "lon": 2.926,
+      "tags": {
+        "name": "Visserskaai",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2236,
+      "lon": 2.8974,
+      "tags": {
+        "name": "Wellington Hippodrome",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2255,
+      "lon": 2.9038,
+      "tags": {
+        "name": "Jardin japonais Shin Kai Tei",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.23,
+      "lon": 2.9174,
+      "tags": {
+        "name": "De Grote Post",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2312,
+      "lon": 2.9206,
+      "tags": {
+        "name": "Place Wapenplein",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 51.2419,
+      "lon": 2.932,
+      "tags": {
+        "name": "Phare Lange Nelle",
+        "tourism": "viewpoint"
+      }
+    }
+  ],
+  "cologne": [
+    {
+      "type": "node",
+      "lat": 50.9413,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Cathédrale de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9408,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Musée Ludwig",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9593,
+      "tags": {
+        "name": "Musée romano-germanique",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9419,
+      "lon": 6.9655,
+      "tags": {
+        "name": "Pont Hohenzollern",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9387,
+      "lon": 6.9596,
+      "tags": {
+        "name": "Vieille ville de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9386,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Hôtel de ville historique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9382,
+      "lon": 6.9611,
+      "tags": {
+        "name": "Église Gross St. Martin",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9371,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Musée Wallraf-Richartz",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9319,
+      "lon": 6.9644,
+      "tags": {
+        "name": "Musée du chocolat",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9279,
+      "lon": 6.9645,
+      "tags": {
+        "name": "Rheinauhafen",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9258,
+      "lon": 6.9646,
+      "tags": {
+        "name": "Kranhäuser",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9338,
+      "lon": 6.9574,
+      "tags": {
+        "name": "Église Sainte-Marie-du-Capitole",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.944,
+      "lon": 6.9452,
+      "tags": {
+        "name": "Église Saint-Géréon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9364,
+      "lon": 6.9433,
+      "tags": {
+        "name": "Basilique des Saints-Apôtres",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9461,
+      "lon": 6.9572,
+      "tags": {
+        "name": "Église Sainte-Ursule",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9464,
+      "lon": 6.9625,
+      "tags": {
+        "name": "Basilique Saint-Cunibert",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9384,
+      "lon": 6.9545,
+      "tags": {
+        "name": "Musée Kolumba",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9404,
+      "lon": 6.9556,
+      "tags": {
+        "name": "Musée des arts appliqués MAKK",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9378,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Musée du parfum Farina",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9412,
+      "lon": 6.9503,
+      "tags": {
+        "name": "EL-DE Haus",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9363,
+      "lon": 6.9476,
+      "tags": {
+        "name": "Neumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9357,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Heumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9385,
+      "lon": 6.9595,
+      "tags": {
+        "name": "Alter Markt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9603,
+      "lon": 6.9701,
+      "tags": {
+        "name": "Flora et jardin botanique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9595,
+      "lon": 6.973,
+      "tags": {
+        "name": "Zoo de Cologne",
+        "tourism": "zoo"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.957,
+      "lon": 6.971,
+      "tags": {
+        "name": "Téléphérique de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9501,
+      "lon": 6.9772,
+      "tags": {
+        "name": "Rheinpark",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9717,
+      "tags": {
+        "name": "Cologne Triangle",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9383,
+      "lon": 6.9829,
+      "tags": {
+        "name": "Lanxess Arena",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9297,
+      "lon": 6.9501,
+      "tags": {
+        "name": "Église Saint-Pantaléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9336,
+      "lon": 6.9542,
+      "tags": {
+        "name": "Église Sainte-Cécile",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9342,
+      "lon": 6.9538,
+      "tags": {
+        "name": "Musée Schnütgen",
+        "tourism": "museum"
+      }
+    }
+  ],
+  "koln": [
+    {
+      "type": "node",
+      "lat": 50.9413,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Cathédrale de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9408,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Musée Ludwig",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9593,
+      "tags": {
+        "name": "Musée romano-germanique",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9419,
+      "lon": 6.9655,
+      "tags": {
+        "name": "Pont Hohenzollern",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9387,
+      "lon": 6.9596,
+      "tags": {
+        "name": "Vieille ville de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9386,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Hôtel de ville historique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9382,
+      "lon": 6.9611,
+      "tags": {
+        "name": "Église Gross St. Martin",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9371,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Musée Wallraf-Richartz",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9319,
+      "lon": 6.9644,
+      "tags": {
+        "name": "Musée du chocolat",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9279,
+      "lon": 6.9645,
+      "tags": {
+        "name": "Rheinauhafen",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9258,
+      "lon": 6.9646,
+      "tags": {
+        "name": "Kranhäuser",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9338,
+      "lon": 6.9574,
+      "tags": {
+        "name": "Église Sainte-Marie-du-Capitole",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.944,
+      "lon": 6.9452,
+      "tags": {
+        "name": "Église Saint-Géréon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9364,
+      "lon": 6.9433,
+      "tags": {
+        "name": "Basilique des Saints-Apôtres",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9461,
+      "lon": 6.9572,
+      "tags": {
+        "name": "Église Sainte-Ursule",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9464,
+      "lon": 6.9625,
+      "tags": {
+        "name": "Basilique Saint-Cunibert",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9384,
+      "lon": 6.9545,
+      "tags": {
+        "name": "Musée Kolumba",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9404,
+      "lon": 6.9556,
+      "tags": {
+        "name": "Musée des arts appliqués MAKK",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9378,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Musée du parfum Farina",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9412,
+      "lon": 6.9503,
+      "tags": {
+        "name": "EL-DE Haus",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9363,
+      "lon": 6.9476,
+      "tags": {
+        "name": "Neumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9357,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Heumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9385,
+      "lon": 6.9595,
+      "tags": {
+        "name": "Alter Markt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9603,
+      "lon": 6.9701,
+      "tags": {
+        "name": "Flora et jardin botanique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9595,
+      "lon": 6.973,
+      "tags": {
+        "name": "Zoo de Cologne",
+        "tourism": "zoo"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.957,
+      "lon": 6.971,
+      "tags": {
+        "name": "Téléphérique de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9501,
+      "lon": 6.9772,
+      "tags": {
+        "name": "Rheinpark",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9717,
+      "tags": {
+        "name": "Cologne Triangle",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9383,
+      "lon": 6.9829,
+      "tags": {
+        "name": "Lanxess Arena",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9297,
+      "lon": 6.9501,
+      "tags": {
+        "name": "Église Saint-Pantaléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9336,
+      "lon": 6.9542,
+      "tags": {
+        "name": "Église Sainte-Cécile",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9342,
+      "lon": 6.9538,
+      "tags": {
+        "name": "Musée Schnütgen",
+        "tourism": "museum"
+      }
+    }
+  ],
+  "koeln": [
+    {
+      "type": "node",
+      "lat": 50.9413,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Cathédrale de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9408,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Musée Ludwig",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9593,
+      "tags": {
+        "name": "Musée romano-germanique",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9419,
+      "lon": 6.9655,
+      "tags": {
+        "name": "Pont Hohenzollern",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9387,
+      "lon": 6.9596,
+      "tags": {
+        "name": "Vieille ville de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9386,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Hôtel de ville historique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9382,
+      "lon": 6.9611,
+      "tags": {
+        "name": "Église Gross St. Martin",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9371,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Musée Wallraf-Richartz",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9319,
+      "lon": 6.9644,
+      "tags": {
+        "name": "Musée du chocolat",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9279,
+      "lon": 6.9645,
+      "tags": {
+        "name": "Rheinauhafen",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9258,
+      "lon": 6.9646,
+      "tags": {
+        "name": "Kranhäuser",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9338,
+      "lon": 6.9574,
+      "tags": {
+        "name": "Église Sainte-Marie-du-Capitole",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.944,
+      "lon": 6.9452,
+      "tags": {
+        "name": "Église Saint-Géréon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9364,
+      "lon": 6.9433,
+      "tags": {
+        "name": "Basilique des Saints-Apôtres",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9461,
+      "lon": 6.9572,
+      "tags": {
+        "name": "Église Sainte-Ursule",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9464,
+      "lon": 6.9625,
+      "tags": {
+        "name": "Basilique Saint-Cunibert",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9384,
+      "lon": 6.9545,
+      "tags": {
+        "name": "Musée Kolumba",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9404,
+      "lon": 6.9556,
+      "tags": {
+        "name": "Musée des arts appliqués MAKK",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9378,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Musée du parfum Farina",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9412,
+      "lon": 6.9503,
+      "tags": {
+        "name": "EL-DE Haus",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9363,
+      "lon": 6.9476,
+      "tags": {
+        "name": "Neumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9357,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Heumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9385,
+      "lon": 6.9595,
+      "tags": {
+        "name": "Alter Markt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9603,
+      "lon": 6.9701,
+      "tags": {
+        "name": "Flora et jardin botanique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9595,
+      "lon": 6.973,
+      "tags": {
+        "name": "Zoo de Cologne",
+        "tourism": "zoo"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.957,
+      "lon": 6.971,
+      "tags": {
+        "name": "Téléphérique de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9501,
+      "lon": 6.9772,
+      "tags": {
+        "name": "Rheinpark",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9717,
+      "tags": {
+        "name": "Cologne Triangle",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9383,
+      "lon": 6.9829,
+      "tags": {
+        "name": "Lanxess Arena",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9297,
+      "lon": 6.9501,
+      "tags": {
+        "name": "Église Saint-Pantaléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9336,
+      "lon": 6.9542,
+      "tags": {
+        "name": "Église Sainte-Cécile",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9342,
+      "lon": 6.9538,
+      "tags": {
+        "name": "Musée Schnütgen",
+        "tourism": "museum"
+      }
+    }
+  ],
+  "köln": [
+    {
+      "type": "node",
+      "lat": 50.9413,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Cathédrale de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9408,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Musée Ludwig",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9593,
+      "tags": {
+        "name": "Musée romano-germanique",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9419,
+      "lon": 6.9655,
+      "tags": {
+        "name": "Pont Hohenzollern",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9387,
+      "lon": 6.9596,
+      "tags": {
+        "name": "Vieille ville de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9386,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Hôtel de ville historique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9382,
+      "lon": 6.9611,
+      "tags": {
+        "name": "Église Gross St. Martin",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9371,
+      "lon": 6.9585,
+      "tags": {
+        "name": "Musée Wallraf-Richartz",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9319,
+      "lon": 6.9644,
+      "tags": {
+        "name": "Musée du chocolat",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9279,
+      "lon": 6.9645,
+      "tags": {
+        "name": "Rheinauhafen",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9258,
+      "lon": 6.9646,
+      "tags": {
+        "name": "Kranhäuser",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9338,
+      "lon": 6.9574,
+      "tags": {
+        "name": "Église Sainte-Marie-du-Capitole",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.944,
+      "lon": 6.9452,
+      "tags": {
+        "name": "Église Saint-Géréon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9364,
+      "lon": 6.9433,
+      "tags": {
+        "name": "Basilique des Saints-Apôtres",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9461,
+      "lon": 6.9572,
+      "tags": {
+        "name": "Église Sainte-Ursule",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9464,
+      "lon": 6.9625,
+      "tags": {
+        "name": "Basilique Saint-Cunibert",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9384,
+      "lon": 6.9545,
+      "tags": {
+        "name": "Musée Kolumba",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9404,
+      "lon": 6.9556,
+      "tags": {
+        "name": "Musée des arts appliqués MAKK",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9378,
+      "lon": 6.9583,
+      "tags": {
+        "name": "Musée du parfum Farina",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9412,
+      "lon": 6.9503,
+      "tags": {
+        "name": "EL-DE Haus",
+        "tourism": "museum"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9363,
+      "lon": 6.9476,
+      "tags": {
+        "name": "Neumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9357,
+      "lon": 6.9604,
+      "tags": {
+        "name": "Heumarkt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9385,
+      "lon": 6.9595,
+      "tags": {
+        "name": "Alter Markt",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9603,
+      "lon": 6.9701,
+      "tags": {
+        "name": "Flora et jardin botanique",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9595,
+      "lon": 6.973,
+      "tags": {
+        "name": "Zoo de Cologne",
+        "tourism": "zoo"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.957,
+      "lon": 6.971,
+      "tags": {
+        "name": "Téléphérique de Cologne",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9501,
+      "lon": 6.9772,
+      "tags": {
+        "name": "Rheinpark",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9406,
+      "lon": 6.9717,
+      "tags": {
+        "name": "Cologne Triangle",
+        "tourism": "viewpoint"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9383,
+      "lon": 6.9829,
+      "tags": {
+        "name": "Lanxess Arena",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9297,
+      "lon": 6.9501,
+      "tags": {
+        "name": "Église Saint-Pantaléon",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9336,
+      "lon": 6.9542,
+      "tags": {
+        "name": "Église Sainte-Cécile",
+        "tourism": "attraction"
+      }
+    },
+    {
+      "type": "node",
+      "lat": 50.9342,
+      "lon": 6.9538,
+      "tags": {
+        "name": "Musée Schnütgen",
+        "tourism": "museum"
+      }
+    }
+  ]
+}

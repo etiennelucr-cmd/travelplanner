@@ -1,0 +1,1 @@
+V6.1 — carte : centres de villes et voyages multi-etapes, sans Tailscale

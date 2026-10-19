@@ -1,0 +1,18 @@
+Travel Planner V6.1 — Correctif carte et coordonnées
+
+CAUSE : les 118 voyages du trips.json fourni ont tous lat/lon = null.
+Le navigateur ne disposait que de quelques centres de villes dans son cache.
+
+INSTALLATION SANS PERDRE LES VOYAGES ACTUELS (127 destinations possibles) :
+1. Fermer la fenêtre du serveur Travel Planner.
+2. Faire une copie de sécurité du dossier data actuel.
+3. Copier UNIQUEMENT les fichiers suivants du dossier www de V6.1 vers votre www actuel :
+   - app.js
+   - index.html
+   - city-coordinates.js
+4. Ne pas remplacer data/trips.json ni data/records.json.
+5. Redémarrer le serveur puis actualiser avec Ctrl+F5.
+
+Les coordonnées sont des centres de ville approximatifs, non des adresses.
+Les voyages multi-villes sont affichés sur plusieurs marqueurs.
+Si des villes ont été ajoutées après l'export fourni, elles seront recherchées en ligne.

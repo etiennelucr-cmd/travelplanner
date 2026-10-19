@@ -1,0 +1,241 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Travel Planner V5.3</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="/style.css?v=694"><style>/* Travel Planner V6.10 : navigation verticale et météo */
+@media (min-width: 900px){
+ body{padding-left:232px}
+ header{position:relative;padding:16px 24px}
+ nav.tabs{position:fixed;left:0;top:0;bottom:0;width:232px;z-index:1000;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;gap:8px;padding:22px 12px;background:#173858;box-shadow:2px 0 18px #0002;overflow-y:auto}
+ nav.tabs::before{content:"✈ Travel Planner";display:block;color:#fff;font-size:19px;font-weight:800;margin:5px 7px 20px}
+ nav.tabs button{text-align:left;white-space:normal;padding:12px 14px;background:#254b6b;color:#f0f7ff;border-radius:9px}
+ nav.tabs button:hover{background:#35678f}
+ nav.tabs button.active{background:#1980c5;color:#fff}
+ main{max-width:1600px;margin:18px auto;padding:0 18px}
+}
+@media (max-width:899px){nav.tabs{position:sticky;top:0;z-index:1000;overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start}nav.tabs button{flex:0 0 auto}}
+.tp-weather{border:1px solid #cbddeb;background:#f5f9fd;border-radius:14px;padding:16px;margin:18px 0}
+.tp-weather-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tp-weather-head h3{font-size:17px;color:#0b547f}
+.tp-weather-head .hint{margin:4px 0}
+.tp-weather-days{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:9px;margin:12px 0}
+.tp-weather-day{background:#fff;border:1px solid #dbe5ef;border-radius:11px;padding:11px;display:flex;flex-direction:column;gap:5px}
+.tp-weather-day strong{font-size:13px}
+.tp-weather-day .tp-weather-icon{font-size:24px}
+.tp-weather-day .tp-weather-temps{font-weight:700}
+.tp-weather-day small{color:#51677a}
+
+.tp-weather-location input{min-width:190px;flex:1}.tp-weather-location select{min-width:160px}
+@media (min-width:900px){
+ html body{padding-left:232px!important}
+ html body .tabs{position:fixed!important;left:0!important;right:auto!important;top:0!important;bottom:0!important;width:232px!important;height:100vh!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;flex-wrap:nowrap!important;gap:8px!important;padding:22px 12px!important;background:#173858!important;overflow-y:auto!important}
+ html body .tabs button{display:block!important;width:100%!important;flex:none!important;text-align:left!important;background:#254b6b!important;color:#f0f7ff!important}
+ html body .tabs button.active{background:#1980c5!important}
+ html body header{padding:18px 25px!important}
+ html body main{max-width:1600px!important;margin:20px auto!important;padding:0 18px!important}
+}
+</style>
+<style id="tp-redesign">
+:root{--tp-navy:#102f50;--tp-blue:#1683d4}
+html body{background:#f3f7fc;color:#10234a}
+html body header{background:linear-gradient(115deg,#102e50,#173e63)!important;color:white;display:grid;grid-template-columns:minmax(190px,1fr) minmax(330px,660px) minmax(160px,1fr);align-items:center;gap:20px;min-height:108px;box-sizing:border-box}
+header h1{color:white!important;font-size:30px;margin:0}header h1 small{font-size:15px;color:#bdd3e8}
+header>div:first-child>span{color:#e3efff}
+#stats{justify-self:end;background:#f4f8ff;color:#102c53;border-radius:12px;padding:15px 20px;font-weight:750;text-align:center}
+.tp-top-widget{display:flex;align-items:center;justify-content:space-around;gap:18px;background:linear-gradient(115deg,#fff,#e9f3ff);color:#102650;border-radius:12px;padding:13px 19px;box-shadow:0 4px 14px #001b3515}
+.tp-datetime,.tp-paris-weather{display:flex;align-items:center;gap:13px;min-width:0}
+.tp-top-emoji{font-size:35px}.tp-top-date{font-weight:750;font-size:14px}.tp-top-time{font-size:33px;line-height:1.1;font-weight:850;font-variant-numeric:tabular-nums}
+.tp-weather-city{font-weight:800}.tp-weather-temp{font-weight:850;font-size:26px}.tp-weather-desc{font-size:12px;color:#4e698a}
+.tp-top-separator{width:1px;align-self:stretch;background:#c6d9ee}
+html body .tabs button{border-radius:10px!important;padding:14px!important;font-weight:650}
+html body .tabs button.active{background:#117dca!important}
+#view-overview{border:0;background:transparent;box-shadow:none;padding:0}
+#view-overview h2{font-size:29px;color:#0b2149;margin:6px 0 22px}
+#view-overview .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:20px}
+.tp-kpi{background:linear-gradient(125deg,#f1f8ff,#fff);border:1px solid #cfe1f6;border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;min-height:90px}
+.tp-kpi-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:50%;color:white;font-size:26px;flex-shrink:0;background:#308bef}
+.tp-kpi:nth-child(2) .tp-kpi-icon{background:#39b66b}.tp-kpi:nth-child(3) .tp-kpi-icon{background:#6550d9}.tp-kpi:nth-child(4) .tp-kpi-icon{background:#f58a24}
+.tp-kpi-value{font-size:32px;font-weight:850;line-height:1.1;color:#10234a}.tp-kpi-label{font-weight:700}.tp-kpi-sub{font-size:12px;color:#5c7494;margin-top:4px}
+#view-overview .dashcols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+#view-overview .soft{background:white;border:1px solid #d6e5f7;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 1px 3px #102a4810}
+#view-overview .soft h3{color:#0e234d;font-size:21px;margin:0 0 18px}
+.tp-bars{display:flex;align-items:flex-end;gap:10px;height:220px;padding:10px 0 0;border-bottom:1px solid #dce6f1}
+.tp-bar-item{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}
+.tp-bar-value{font-weight:800;font-size:13px}.tp-bar-fill{width:100%;max-width:62px;background:linear-gradient(#54a8ff,#3087e6);border-radius:5px 5px 0 0;min-height:2px}
+.tp-bar-year{font-size:12px;margin-top:8px;white-space:nowrap}
+.tp-departure{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid #e7edf5}.tp-departure:last-child{border-bottom:0}
+.tp-departure-icon{display:inline-flex;align-items:center;gap:5px;font-size:28px;white-space:nowrap;line-height:1;background:#e7f2ff;padding:10px;border-radius:9px}.tp-departure-main{flex:1;min-width:0}.tp-departure-main strong{display:block}.tp-departure-main small{color:#627c9d}
+.tp-pill{white-space:nowrap;background:#fff0d9;color:#d36b00;padding:7px 10px;border-radius:9px;font-weight:700;font-size:12px}
+.tp-breakdown{display:flex;align-items:center;gap:35px;flex-wrap:wrap}.tp-donut{width:190px;height:190px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}.tp-donut-inner{width:115px;height:115px;background:white;border-radius:50%;display:grid;place-items:center;text-align:center;font-size:23px;font-weight:850;line-height:1.1}.tp-donut-inner small{font-size:13px;font-weight:500}.tp-legend{flex:1;min-width:210px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.tp-legend-line{display:flex;align-items:center;gap:8px;font-size:13px}.tp-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+@media(max-width:1200px){html body header{grid-template-columns:1fr 1fr}.tp-top-widget{grid-column:1/-1;grid-row:2;justify-self:center;width:min(100%,650px);box-sizing:border-box}#view-overview .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){html body header{display:flex;flex-direction:column;align-items:stretch}#stats{justify-self:auto}#view-overview .dashcols{grid-template-columns:1fr}#view-overview .kpis{grid-template-columns:1fr 1fr}.tp-kpi{padding:12px;gap:8px}.tp-kpi-icon{width:38px;height:38px;font-size:20px}.tp-kpi-value{font-size:24px}.tp-top-widget{gap:9px;padding:12px}.tp-top-emoji{font-size:24px}.tp-top-time{font-size:25px}.tp-legend{grid-template-columns:1fr}}
+</style>
+</head><body>
+<header><div><h1>✈ Travel Planner <small>V4</small></h1><span>Mes voyages · Ma carte · Mes découvertes</span></div><div class="tp-top-widget" aria-label="Date, heure et météo de Paris"><div class="tp-datetime"><span class="tp-top-emoji">🗓️</span><div><div class="tp-top-date" id="tpToday">Date du jour</div><div class="tp-top-time" id="tpClock">--:--:--</div></div></div><div class="tp-top-separator"></div><div class="tp-paris-weather"><span class="tp-top-emoji" id="tpWeatherIcon">🌤️</span><div><div class="tp-weather-city">Paris</div><div class="tp-weather-temp" id="tpParisTemp">--°C</div><div class="tp-weather-desc" id="tpParisDesc">Chargement météo…</div></div></div></div><span id="stats"></span></header>
+<nav class="tabs" aria-label="Navigation"><button data-tab="overview" class="active">📊 Tableau de bord</button><button data-tab="dashboard">🗺 Carte & voyages</button><button data-tab="explore">🧭 Visites</button><button data-tab="weather">🌦 Météo</button><button data-tab="ideas">✨ Idées</button><button data-tab="calendar">📅 Calendrier</button></nav>
+<main>
+<section class="panel view active" id="view-overview"><h2>Vue d’ensemble de mes voyages</h2><div id="kpis" class="kpis"></div><div class="dashcols"><div class="soft"><h3>Voyages par année</h3><div id="yearBars"></div></div><div class="soft"><h3>Prochains départs</h3><div id="upcoming"></div></div></div><div class="soft"><h3>Répartition des destinations</h3><div id="breakdown"></div></div><p class="hint">Les voyages multi-villes sont comptés comme une seule entrée. Les pays non renseignés ne sont pas devinés.</p></section>
+<section class="panel view" id="view-dashboard"><h2>Mes destinations</h2><div class="actions"><button id="new">+ Ajouter</button><label class="upload">Importer Keep<input id="import" type="file" accept=".txt,.json" multiple hidden></label><label class="upload">📄 Importer liste Voyages (.txt)<input id="importVoyages" type="file" accept=".txt,text/plain" hidden></label><button id="locate" class="secondary">📍 Localiser sur la carte</button><button id="export" class="secondary">Exporter mes données</button><button id="backupAll" class="secondary">💾 Sauvegarde complète</button></div><div class="legend"><span><i class="legend-dot blue"></i> 🔵 Visité</span><span><i class="legend-dot orange"></i> 🟠 Programmé</span><span><i class="legend-dot purple"></i> 🟣 Envie</span></div><div class="map-filter-bar" role="group" aria-label="Filtrer les destinations sur la carte">
+<button type="button" class="map-filter-button active" data-map-filter="all" aria-pressed="true">🌍 Tous</button>
+<button type="button" class="map-filter-button" data-map-filter="past" aria-pressed="false">🔵 Visités</button>
+<button type="button" class="map-filter-button" data-map-filter="scheduled" aria-pressed="false">🟠 Programmés</button>
+<button type="button" class="map-filter-button" data-map-filter="wish" aria-pressed="false">🟣 Envies</button>
+</div><p id="mapStatus" class="hint" aria-live="polite">Chargement des destinations…</p><p class="hint">Utilise les boutons ci-dessus pour filtrer uniquement la carte ; le filtre de la liste en dessous reste indépendant. Chaque statut présent dans une même ville dispose de son marqueur coloré ; clique dessus pour voir les voyages. Les villes non localisées sont listées sous la carte.</p><div id="map"></div><p id="missingDestinations" class="hint" aria-live="polite"></p><div class="line"><input id="filter" placeholder="Filtrer les destinations"><select id="statusFilter"><option value="all">Tous les statuts</option><option value="past">Visités</option><option value="scheduled">Programmés</option><option value="wish">Envies</option></select></div><div id="trips" class="tripgrid"></div></section>
+<section class="panel view" id="view-explore"><h2>Que visiter selon le temps disponible ?</h2><div class="line"><label for="europeCountry">Pays européen</label><select id="europeCountry"><option value="">Choisir un pays…</option></select><label for="europeCity">Ville proposée</label><select id="europeCity" disabled><option value="">Choisir un pays d’abord</option></select></div><div class="line"><input id="city" placeholder="Ou saisir une autre ville (ex. Strasbourg)"><button id="search">Localiser</button></div><p class="hint">Choisis un pays puis une ville, ou saisis librement une ville non répertoriée. La liste est une sélection de villes, pas un catalogue exhaustif des monuments : les lieux sont recherchés en ligne et mis en cache.</p><div class="line"><label for="duration">Durée</label><select id="duration"><option value="30">30 min</option><option value="60">1 h</option><option value="120">2 h</option><option value="240">4 h</option><option value="480">1 jour (8 h)</option><option value="960">2 jours (16 h de visite)</option><option value="1440">3 jours (24 h de visite)</option></select><button id="plan">Créer un programme</button></div><p class="hint">Lieux issus d'OpenStreetMap. Les temps sont des estimations et les segments pointillés ne suivent pas nécessairement les rues. Horaires et réservations à vérifier.</p><section id="visitOutput" class="visit-output" aria-label="Programme de visites généré"><div class="visit-output-head"><h3>📍 Mon programme de visites</h3><p class="hint">Le programme généré apparaît ici, directement sous le formulaire.</p></div><div id="results" aria-live="polite"><p class="hint">Choisis une ville et une durée, puis clique sur « Créer un programme ».</p></div><div id="visitMap" class="visit-map" hidden></div></section><div class="actions"><button id="exportVisit" class="secondary">📄 Télécharger ce programme (.txt)</button></div></section>
+<section class="panel view" id="view-weather"><h2>🌦 Météo des destinations</h2><section class="tp-weather" aria-label="Prévisions météo de la destination"><div class="line tp-weather-location"><label for="weatherCity">Ville</label><input id="weatherCity" placeholder="Ex. Honfleur, Gand, Rome"><label for="weatherCountry">Pays</label><select id="weatherCountry"><option value="">Tous les pays</option></select><button id="weatherUseVisit" type="button" class="secondary">Utiliser la ville des visites</button></div><div class="tp-weather-head"><div><h3>🌦 Météo des destinations · 14 jours</h3><p class="hint">Prévisions actualisées en ligne pour la ville choisie. Au-delà de quelques jours, elles sont indicatives.</p></div><button type="button" id="weatherRefresh" class="secondary">Actualiser la météo</button></div><p id="weatherStatus" role="status" aria-live="polite">Choisis une ville pour afficher la météo.</p><div id="weatherDays" class="tp-weather-days"></div><p class="hint">Données : Open-Meteo. Les prévisions peuvent changer ; connexion Internet nécessaire.</p></section></section><section class="panel view" id="view-route"><h2>Construire un trajet entre plusieurs villes</h2><p>Indique de 2 à 10 étapes séparées par une virgule ou une nouvelle ligne, dans l'ordre souhaité.</p><div class="line"><label>Transport <select id="routeMode"><option value="driving">Voiture (trajet calculé)</option><option value="train">Train (estimation indicative)</option></select></label><label>Arrêt dans chaque ville (minutes) <input id="routeStopMinutes" type="number" min="0" max="1440" value="60"></label></div><textarea id="stops" rows="4" placeholder="Paris, Reims, Metz, Strasbourg"></textarea><div class="actions"><button id="makeRoute">Calculer le trajet routier</button><button id="routeClear" class="secondary">Effacer le tracé</button></div><p class="hint">Voiture : OSRM public, sans trafic. Train : estimation géographique uniquement, sans horaires, lignes ni correspondances vérifiés. Ajoute tes temps de visite aux arrêts.</p><div id="routeResults"></div><div class="actions"><button id="exportRoute" class="secondary">📄 Télécharger ce circuit (.txt)</button></div></section>
+<section class="panel view" id="view-ideas"><h2>Idées de prochaines destinations</h2><p>Nouvelles destinations absentes de ta liste, classées par thème et par proximité avec tes voyages visités. Aucune réservation ni prix n'est vérifié.</p><div class="line"><select id="ideaTheme"><option value="all">Tous les thèmes</option><option value="city">Culture & villes</option><option value="nature">Nature & paysages</option><option value="events">Événements</option></select><button id="refreshIdeas">Actualiser les idées</button></div><label for="ideaMode">Proximité</label><select id="ideaMode"><option value="all">Toutes les suggestions</option><option value="near">Villes voisines de mes voyages visités</option></select><p id="ideasCount" class="hint"></p><div id="ideasList" class="tripgrid"></div></section>
+<section class="panel view" id="view-budget"><h2>Budget de voyage</h2><p class="hint">Montants saisis par toi : aucune tarification en temps réel. Les estimations sont des hypothèses modifiables.</p><div class="formgrid"><label>Voyage<select id="budgetTrip"></select></label><label>Nombre de jours<input id="budgetDays" type="number" min="1" max="365" value="2"></label><label>Transport total (€)<input id="budgetTransport" type="number" min="0" value="80"></label><label>Hébergement par nuit (€)<input id="budgetHotel" type="number" min="0" value="90"></label><label>Repas par jour (€)<input id="budgetFood" type="number" min="0" value="35"></label><label>Visites total (€)<input id="budgetVisits" type="number" min="0" value="35"></label><label>Autres frais (€)<input id="budgetOther" type="number" min="0" value="15"></label><label>Nombre de personnes<input id="budgetPeople" type="number" min="1" max="20" value="1"></label></div><div class="actions"><button id="budgetCalculate">Calculer</button><button id="budgetEstimate" class="secondary">✨ Estimation automatique indicative</button><button id="budgetSave" class="secondary">Enregistrer ce budget</button></div><p id="budgetEstimateNote" class="hint">Les estimations automatiques sont des hypothèses et non des prix relevés chez des fournisseurs. Compare ensuite les tarifs réels sur <a href="https://www.booking.com/" target="_blank" rel="noopener noreferrer">Booking.com</a>, <a href="https://www.sncf-connect.com/" target="_blank" rel="noopener noreferrer">SNCF Connect</a> et <a href="https://www.tripadvisor.fr/" target="_blank" rel="noopener noreferrer">Tripadvisor</a>.</p><div id="budgetOutput" class="soft"></div></section>
+<section class="panel view" id="view-journal"><h2>Carnet de voyage & souvenirs</h2><p class="hint">Notes et photos enregistrées sur ton ordinateur dans data/records.json. Les images sont compressées avant enregistrement ; sauvegarde ce fichier régulièrement.</p><div class="formgrid"><label>Voyage<select id="journalTrip"></select></label><label>Titre du souvenir<input id="journalTitle" placeholder="Ma journée à…" maxlength="120"></label></div><label>Récit de voyage<textarea id="journalText" rows="7" placeholder="Les lieux visités, mes impressions, mes bonnes adresses…"></textarea></label><div class="actions"><label class="upload">Ajouter des photos<input id="journalPhotos" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></label><button id="journalSave">Enregistrer le carnet</button><button id="journalPdf" class="secondary">Imprimer / enregistrer en PDF</button></div><div id="journalGallery" class="gallery"></div><p class="hint">Pour créer le PDF, choisis « Enregistrer au format PDF » dans la fenêtre d'impression du navigateur.</p></section>
+<section class="panel view" id="view-calendar"><h2>Calendrier de mes voyages</h2><div class="line"><button id="prevMonth" class="secondary">←</button><strong id="monthTitle"></strong><button id="nextMonth" class="secondary">→</button></div><div id="calendarGrid" class="calendar"></div><p class="hint">Les voyages sans date n'apparaissent pas dans le calendrier. Les voyages avec une seule date occupent une journée.</p></section>
+<section class="panel view" id="view-prepare"><h2>Préparer mon départ</h2><p class="hint">Liste de préparation personnalisée, sauvegardée sur cet ordinateur. Les cases cochées sont propres à chaque voyage.</p><div class="line"><label>Voyage <select id="prepTrip"></select></label><button id="prepSave">Enregistrer la liste</button></div><div id="prepChecklist" class="soft"></div><div class="line"><input id="prepNew" maxlength="150" placeholder="Ajouter une tâche : vérifier les billets…"><button id="prepAdd" class="secondary">Ajouter</button></div><p id="prepProgress" class="hint"></p></section></main><dialog id="editor"><form id="tripForm"><h2 id="formTitle">Ajouter un voyage</h2><input type="hidden" id="tripId"><label>Destination *<input id="name" required maxlength="150"></label><label>Pays<input id="country"></label><label>Statut<select id="kind"><option value="past">Visité</option><option value="future">À venir / projet</option></select></label><label>Date de début<input type="date" id="start"></label><label>Date de fin<input type="date" id="end"></label><label>Notes<textarea id="notes" rows="3"></textarea></label><div class="actions"><button type="button" id="cancel" class="secondary">Annuler</button><button type="submit">Enregistrer</button></div></form></dialog><div id="toast" role="status" aria-live="polite"></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="/city-coordinates.js?v=62"></script><script src="/app.js?v=694"></script><script src="/v3.js"></script><script src="/v4.js"></script><script>/* Travel Planner V6.10 - weather forecast for the chosen city (14 days). */
+(()=>{
+ 'use strict';
+ const cityInput=document.getElementById('weatherCity');
+ const countrySelect=document.getElementById('weatherCountry');
+ const citySelect=document.getElementById('europeCity');
+ const status=document.getElementById('weatherStatus');
+ const days=document.getElementById('weatherDays');
+ const button=document.getElementById('weatherRefresh');
+ if(!cityInput||!status||!days||!button)return;
+ let requestNumber=0, debounce;
+ const icons=code=>code===0?'☀️':code<=3?'⛅':code<=48?'🌫️':code<=67?'🌧️':code<=77?'❄️':code<=82?'🌦️':code<=86?'🌨️':'⛈️';
+ const weatherName=code=>code===0?'Ensoleillé':code<=3?'Nuageux':code<=48?'Brume / brouillard':code<=67?'Pluie':code<=77?'Neige':code<=82?'Averses':code<=86?'Averses de neige':'Orage';
+ const valid=(lat,lon)=>Number.isFinite(Number(lat))&&Number.isFinite(Number(lon))&&Math.abs(Number(lat))<=90&&Math.abs(Number(lon))<=180&&(Math.abs(Number(lat))+Math.abs(Number(lon))>0.001);
+ const fetchJson=async url=>{const ctrl=new AbortController();const timeout=setTimeout(()=>ctrl.abort(),12000);try{const response=await fetch(url,{signal:ctrl.signal});if(!response.ok)throw Error('Service météo indisponible ('+response.status+')');return await response.json()}finally{clearTimeout(timeout)}};
+ const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+ const countryCodes={'France':'FR','Belgique':'BE','Andorre':'AD','Autriche':'AT','Allemagne':'DE','Italie':'IT','Espagne':'ES','Portugal':'PT','Pays-Bas':'NL','Suisse':'CH','Luxembourg':'LU','Royaume-Uni':'GB','Irlande':'IE','Danemark':'DK','Suède':'SE','Norvège':'NO','Finlande':'FI','Pologne':'PL','Tchéquie':'CZ','République tchèque':'CZ','Grèce':'GR','Croatie':'HR','Hongrie':'HU','Roumanie':'RO','Slovaquie':'SK','Slovénie':'SI','Bulgarie':'BG','Serbie':'RS','Malte':'MT','Monaco':'MC'};
+ async function locate(city,country){
+   // Prefer the exact city/country pair, independent of the Travel Planner geocoder cache.
+   const code=countryCodes[country];
+   const url='https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=20&language=fr&format=json';
+   const result=await fetchJson(url);
+   let matches=(result.results||[]).filter(r=>valid(r.latitude,r.longitude));
+   if(code){const filtered=matches.filter(r=>r.country_code===code);if(filtered.length)matches=filtered;else throw Error('Ville non trouvée dans le pays sélectionné.');}
+   const wanted=normalize(city);
+   matches.sort((a,b)=>(normalize(b.name)===wanted?1:0)-(normalize(a.name)===wanted?1:0));
+   if(!matches.length)throw Error('Ville non localisée par le service météo.');
+   return matches[0];
+ }
+ async function load(){
+   const city=cityInput.value.trim();
+   const country=countrySelect?.value||'';
+   const current=++requestNumber;
+   days.replaceChildren();
+   if(!city){status.textContent='Choisis une ville pour afficher la météo.';return;}
+   status.textContent='Recherche météo pour '+city+'…';
+   button.disabled=true;
+   try{
+     const location=await locate(city,country);
+     if(current!==requestNumber)return;
+     const url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(location.latitude)+'&longitude='+encodeURIComponent(location.longitude)+'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=14';
+     const result=await fetchJson(url);
+     if(current!==requestNumber)return;
+     const daily=result.daily;
+     if(!daily||!Array.isArray(daily.time)||!daily.time.length)throw Error('Prévisions indisponibles pour cette ville.');
+     status.textContent='Prévisions pour '+location.name+' ('+(location.country||country)+') · '+daily.time.length+' jours';
+     daily.time.forEach((date,i)=>{
+       const card=document.createElement('div');card.className='tp-weather-day';
+       const day=document.createElement('strong');day.textContent=new Intl.DateTimeFormat('fr-FR',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));
+       const symbol=document.createElement('span');symbol.className='tp-weather-icon';symbol.textContent=icons(daily.weather_code?.[i]??3);
+       const label=document.createElement('small');label.textContent=weatherName(daily.weather_code?.[i]??3);
+       const temps=document.createElement('span');temps.className='tp-weather-temps';temps.textContent=Math.round(daily.temperature_2m_max[i])+'° / '+Math.round(daily.temperature_2m_min[i])+'°';
+       const rain=document.createElement('small');rain.textContent='Pluie : '+(daily.precipitation_probability_max?.[i]??'—')+' %';
+       card.append(day,symbol,label,temps,rain);days.append(card);
+     });
+   }catch(error){if(current===requestNumber)status.textContent='Météo indisponible : '+(error.name==='AbortError'?'délai de réponse dépassé':error.message);}
+   finally{if(current===requestNumber)button.disabled=false;}
+ }
+ const schedule=()=>{clearTimeout(debounce);debounce=setTimeout(load,650)};
+ cityInput.addEventListener('input',schedule);
+
+ countrySelect?.addEventListener('change',()=>{requestNumber++;days.replaceChildren();status.textContent='Choisis une ville pour afficher la météo.'});
+ button.addEventListener('click',load);
+
+
+ const countryOptions=document.getElementById('europeCountry');
+ if(countryOptions){for(const option of countryOptions.options){if(option.value && ![...countrySelect.options].some(x=>x.value===option.value)){countrySelect.add(new Option(option.textContent,option.value));}}}
+ document.getElementById('weatherUseVisit')?.addEventListener('click',()=>{
+   cityInput.value=document.getElementById('city')?.value||'';
+   countrySelect.value=document.getElementById('europeCountry')?.value||'';
+   load();
+ });
+ // Keep the independent weather view usable even if visit geolocation fails.
+ if(!cityInput.value.trim() && document.getElementById('city')?.value?.trim()){
+   cityInput.value=document.getElementById('city').value.trim();
+   countrySelect.value=document.getElementById('europeCountry')?.value||'';
+ }
+ if(cityInput.value.trim())load();
+})();
+</script><script>document.querySelector('[data-tab="weather"]')?.addEventListener('click',function(){document.querySelectorAll('.tabs [data-tab]').forEach(b=>b.classList.toggle('active',b===this));document.querySelectorAll('main .view').forEach(v=>v.classList.toggle('active',v.id==='view-weather'));});</script>
+<script id="tp-redesign-js">
+(()=>{
+'use strict';
+const $tp=id=>document.getElementById(id);
+const fmtDate=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const fmtTime=new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+function clock(){const d=new Date();$tp('tpToday').textContent=fmtDate.format(d).replace(/^./,c=>c.toUpperCase());$tp('tpClock').textContent=fmtTime.format(d)}
+clock();setInterval(clock,1000);
+const descriptions=c=>c===0?['☀️','Ensoleillé']:c<=3?['⛅','Partiellement nuageux']:c<=48?['🌫️','Brouillard']:c<=67?['🌧️','Pluie']:c<=77?['❄️','Neige']:c<=82?['🌦️','Averses']:c<=86?['🌨️','Neige']:['⛈️','Orages'];
+async function weather(){try{
+const url='https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&current=temperature_2m,weather_code&timezone=Europe%2FParis';
+const r=await fetch(url);if(!r.ok)throw Error('Service indisponible');
+const data=await r.json();if(!data.current)throw Error('Données indisponibles');
+const [icon,desc]=descriptions(data.current.weather_code);
+$tp('tpWeatherIcon').textContent=icon;$tp('tpParisTemp').textContent=Math.round(data.current.temperature_2m)+'°C';$tp('tpParisDesc').textContent=desc;
+}catch(e){$tp('tpParisDesc').textContent='Météo indisponible';}}
+weather();setInterval(weather,15*60*1000);
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tpCityCountryMap={"nantes":"France","evreux":"France","lyon":"France","tours":"France","rouen":"France","metz":"France","marseille":"France","londres":"Royaume-Uni","annecy":"France","le mont saint michel":"France","etretat":"France","reims":"France","nancy":"France","utrecht":"Pays-Bas","lausanne":"Suisse","rotterdam":"Pays-Bas","le havre":"France","basel":"Suisse","ghent":"Belgique","antwerp":"Belgique","turin":"Italie","milan":"Italie","francfort":"Allemagne","madrid":"Espagne","barcelone":"Espagne","zurich":"Suisse","munich":"Allemagne","lisieux":"France","deauville":"France","hague":"Pays-Bas","amsterdam":"Pays-Bas","orleans":"France","vitre":"France","vannes":"France","carnac":"France","quiberon":"France","lorient":"France","lille":"France","auxerre":"France","dijon":"France","geneve":"Suisse","aix les bains":"France","grenoble":"France","troyes":"France","strasbourg":"France","bruxelles":"Belgique","mons":"Belgique","poitiers":"France","la rochelle":"France","cabourg":"France","caen":"France","granville":"France","rennes":"France","saint malo":"France","aix en provence":"France","nimes":"France","dieppe":"France","clermont ferrand":"France","chartres":"France","angers":"France","nice":"France","menton":"France","monaco":"Monaco","liege":"Belgique","fecamp":"France","bourges":"France","biarritz":"France","hendaye":"France","saint jean de luz":"France","bayonne":"France","bordeaux":"France","montpellier":"France","palavas les flots":"France","sete":"France","beziers":"France","avignon":"France","blois":"France","bruges":"Belgique","ostende":"Belgique","aachen":"Allemagne","cologne":"Allemagne","mechelen":"Belgique","leuven":"Belgique","cannes":"France","antibes":"France","toulon":"France","brest":"France","dublin":"Irlande","seville":"Espagne","dusseldorf":"Allemagne","dax":"France","arcachon":"France","berlin":"Allemagne","stuttgart":"Allemagne","lisbonne":"Portugal","edinburgh":"Royaume-Uni","colmar":"France","vienne":"Autriche","berne":"Suisse","dresden":"Allemagne","rome":"Italie","leiden":"Pays-Bas","porto":"Portugal","leipzig":"Allemagne","salzburg":"Autriche","neuchatel":"Suisse","hamburg":"Allemagne","new york":"États-Unis","luxembourg":"Luxembourg","le touquet":"France","verdun":"France","namur":"Belgique","dinant":"Belgique","limoges":"France","chamonix":"France","saint etienne":"France","eindhoven":"Pays-Bas","wurburg":"Allemagne","dunkerque":"France","saint raphael":"France","lourdes":"France","lugano":"Suisse","dinard":"France","le mans":"France","montreux":"Suisse","albufeira":"Portugal"};
+function redraw(){
+if(typeof trips==='undefined'||!Array.isArray(trips))return;
+const entries=trips.filter(t=>t&&typeof t==='object');
+const citySet=new Set(),countryCounts=new Map(),years=new Map();
+let past=0,upcoming=0;
+const now=new Date(),today=fmtISO(now);
+for(const t of entries){
+const st=typeof status==='function'?status(t):(t.kind==='past'?'past':'wish');
+if(st==='past')past++;if(st==='scheduled')upcoming++;
+for(const part of String(t.name||'').split(/\s*[-–—]\s*|,\s*/)){const clean=part.replace(/\s*[“\"].*?[”\"]\s*/g,'').trim();if(clean)citySet.add(clean.toLocaleLowerCase('fr'))}
+// Country distribution is calculated by unique city, not by trip.
+
+const year=/^\d{4}/.exec(String(t.start||''))?.[0];if(year)years.set(year,(years.get(year)||0)+1);
+}
+const kpis=[['🌐',entries.length,'voyages','enregistrés'],['🌍',citySet.size,'villes','destinations distinctes'],['📷',past,'visités','voyages réalisés'],['📍',upcoming,'voyages à venir','programmés']];
+$tp('kpis').innerHTML=kpis.map(([icon,n,label,sub])=>`<div class="tp-kpi"><span class="tp-kpi-icon">${icon}</span><div><div class="tp-kpi-value">${n}</div><div class="tp-kpi-label">${label}</div><div class="tp-kpi-sub">${sub}</div></div></div>`).join('');
+for(const city of citySet){
+const key=city.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+const country=tpCityCountryMap[key]||'Pays non renseigné';
+countryCounts.set(country,(countryCounts.get(country)||0)+1);
+}
+const ys=[...years.entries()].sort((a,b)=>a[0].localeCompare(b[0])).slice(-9);
+const max=Math.max(1,...ys.map(x=>x[1]));
+$tp('yearBars').innerHTML=ys.length?`<div class="tp-bars">${ys.map(([y,n])=>`<div class="tp-bar-item"><span class="tp-bar-value">${n}</span><div class="tp-bar-fill" style="height:${Math.max(3,n/max*175)}px"></div><span class="tp-bar-year">${y}</span></div>`).join('')}</div>`:'<p class="hint">Ajoute des dates à tes voyages pour voir les statistiques par année.</p>';
+const next=entries.filter(t=>t.start&&t.start>=today&&(typeof status!=='function'||status(t)==='scheduled')).sort((a,b)=>a.start.localeCompare(b.start)).slice(0,4);
+const tpFlagCodes={'France':'FR','Belgique':'BE','Allemagne':'DE','Suisse':'CH','Pays-Bas':'NL','Italie':'IT','Espagne':'ES','Portugal':'PT','Autriche':'AT','Royaume-Uni':'GB','Irlande':'IE','Luxembourg':'LU','Monaco':'MC','États-Unis':'US'};
+const tpFlag=country=>{
+ const code=tpFlagCodes[country];
+ if(!code)return '🌍';
+ return `<img src="https://flagcdn.com/w80/${code.toLowerCase()}.png" alt="Drapeau ${country}" title="${country}" width="40" height="30" loading="lazy" style="width:40px;height:30px;object-fit:cover;border-radius:3px;box-shadow:0 1px 4px #0002;vertical-align:middle" onerror="this.replaceWith(document.createTextNode('${code}'))">`;
+};
+const tpTripCountries=t=>{
+ const parts=String(t.name||'').split(/\s*[-–—]\s*|,\s*/);
+ const found=[...new Set(parts.map(part=>{
+  const key=part.replace(/\s*[“\"].*?[”\"]\s*/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+  return tpCityCountryMap[key]||String(t.country||'').trim()||null;
+ }).filter(Boolean))];
+ return found;
+};
+const daysUntil=s=>{const a=new Date(today+'T12:00:00Z'),b=new Date(s+'T12:00:00Z');return Math.round((b-a)/86400000)};
+const countdown=s=>{const n=daysUntil(s);return n===0?'Départ aujourd’hui':n===1?'Départ demain':`Dans ${n} jours`};
+const formatTripDate=s=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(s||''))return s||'';return new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z'))};
+$tp('upcoming').innerHTML=next.length?next.map(t=>`<div class="tp-departure"><span class="tp-departure-icon" title="${escapeHtml(tpTripCountries(t).join(' / ')||'Pays non renseigné')}">${tpTripCountries(t).length?tpTripCountries(t).map(tpFlag).join(' '):'🌍'}</span><div class="tp-departure-main"><strong>${escapeHtml(t.name)}</strong><small>${escapeHtml(formatTripDate(t.start))}${t.end?' → '+escapeHtml(formatTripDate(t.end)):''}</small></div><span class="tp-pill">${escapeHtml(countdown(t.start))}</span></div>`).join(''):'<p class="hint">Aucun prochain départ programmé.</p>';
+const sorted=[...countryCounts].sort((a,b)=>b[1]-a[1]),top=sorted.slice(0,7),rest=sorted.slice(7).reduce((a,x)=>a+x[1],0);
+if(rest)top.push(['Autres',rest]);
+const colors=['#1672d0','#ff7b35','#e0b420','#1eb19b','#8056d9','#9fb3cf','#ef5d71','#c6d3e5'];
+const total=top.reduce((a,x)=>a+x[1],0),denom=total||1;let progress=0;
+const stops=top.map(([,n],i)=>{const start=progress;progress+=n/denom*100;return `${colors[i]} ${start.toFixed(2)}% ${progress.toFixed(2)}%`});
+$tp('breakdown').innerHTML=`<div class="tp-breakdown"><div class="tp-donut" style="background:${stops.length?'conic-gradient('+stops.join(',')+')':'#e2e9f2'}"><div class="tp-donut-inner"><div>${citySet.size}<br><small>villes</small></div></div></div><div class="tp-legend">${top.map(([country,n],i)=>`<div class="tp-legend-line"><span class="tp-legend-dot" style="background:${colors[i]}"></span><span>${escapeHtml(country)} <strong>${n}</strong> (${Math.round(n/denom*100)}%)</span></div>`).join('')||'<span class="hint">Aucune destination disponible.</span>'}</div></div>`;
+}
+function fmtISO(d){return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(d)}
+if(typeof renderV3==='function'){const previous=renderV3;renderV3=function(){previous();redraw()}}
+document.addEventListener('DOMContentLoaded',redraw);
+if(document.readyState!=='loading')redraw();
+})();
+</script>
+</body></html>
