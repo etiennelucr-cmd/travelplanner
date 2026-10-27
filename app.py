@@ -14,7 +14,7 @@ import math
 import streamlit as st
 
 ROOT = Path(__file__).parent
-st.set_page_config(page_title='Travel Planner V6.1', page_icon='🧭', layout='wide')
+st.set_page_config(page_title='Travel Planner V6.3', page_icon='🧭', layout='wide')
 st.markdown('''<style>
 section[data-testid="stSidebar"]{background:linear-gradient(180deg,#102f53,#193e62);color:white}
 section[data-testid="stSidebar"] *{color:inherit}
@@ -154,7 +154,24 @@ def country_for(name,explicit=''):
         if key in lookup: return lookup[key]
     return ''
 
-def flag_for(t): return COUNTRY_FLAGS.get(country_for(t.get('name',''),t.get('country','')),'🌍')
+COUNTRY_CODES={'France':'fr','Belgique':'be','Allemagne':'de','Pays-Bas':'nl','Suisse':'ch','Italie':'it','Espagne':'es','Royaume-Uni':'gb','Portugal':'pt','Autriche':'at','Luxembourg':'lu','Irlande':'ie','République tchèque':'cz','Pologne':'pl','Danemark':'dk','Monaco':'mc','Albanie':'al'}
+def flag_html(country):
+    code=COUNTRY_CODES.get(country)
+    return f'<img src="https://flagcdn.com/w40/{code}.png" alt="{safe(country)}" width="30" height="20" style="object-fit:cover;border-radius:3px;box-shadow:0 1px 4px #0002;vertical-align:middle">' if code else '🌍'
+def flag_for(t): return flag_html(country_for(t.get('name',''),t.get('country','')))
+@st.cache_data(ttl=86400,show_spinner=False)
+def city_photo(city):
+    # Wikipedia thumbnail; missing/offline -> elegant text-only card, never a false city photo.
+    from urllib.parse import quote
+    for lang in ('fr','en'):
+        try:
+            req=Request(f'https://{lang}.wikipedia.org/api/rest_v1/page/summary/{quote(city.replace(" ","_"))}',headers={'User-Agent':'TravelPlanner/6.3 (personal travel app)'})
+            with urlopen(req,timeout=3) as resp: item=json.load(resp)
+            thumb=item.get('thumbnail',{}).get('source')
+            if thumb and item.get('type')!='disambiguation': return thumb
+        except Exception: pass
+    return ''
+
 
 def safe(x): return html.escape(str(x),quote=True)
 
@@ -273,7 +290,7 @@ def htmlsafe(value):
 
 with st.sidebar:
     st.markdown('## ✈️ Travel Planner')
-    section=st.radio('Navigation', ['📊 Tableau de bord','🗺️ Carte & voyages','🏛️ Visites','🌦️ Météo','💡 Idées','📅 Calendrier'],label_visibility='collapsed',key='tp_navigation')
+    section=st.radio('Navigation', ['📊 Tableau de bord','🗺️ Carte & voyages','🏛️ Visites','🌦️ Météo','💡 Idées'],label_visibility='collapsed',key='tp_navigation')
     st.divider()
     st.caption('OUTILS & SAUVEGARDE')
     st.header('Sauvegarde et restauration')
@@ -323,24 +340,37 @@ try:
     symbol=weather_symbol(paris_weather.get('weather_code'))
 except Exception:
     temp='—';symbol='🌤️'
+# Calendrier miniature intégré au bandeau : navigation locale sans rechargement Streamlit.
+calendar_events = {}
+for trip in all_trips:
+    start = str(trip.get('start') or '')[:10]
+    if re.match(r'^\\d{4}-\\d{2}-\\d{2}$', start):
+        calendar_events.setdefault(start, []).append(str(trip.get('name') or 'Voyage'))
+calendar_events_json = json.dumps(calendar_events, ensure_ascii=False).replace('<', '\\u003c')
 header_html=f"""<!doctype html><html lang='fr'><meta charset='utf-8'><style>
 *{{box-sizing:border-box}}body{{margin:0;font-family:Arial,sans-serif;color:white}}
-.header{{background:linear-gradient(110deg,#102d51,#1b4773);border-radius:15px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}}
-.brand{{font-size:26px;font-weight:800}}.brand small{{font-size:14px;color:#d5e8ff}}.sub{{font-size:12px;color:#d5e8ff;margin-top:5px}}
-.clockweather{{background:#f0f6ff;color:#102d51;padding:10px 17px;border-radius:12px;display:flex;gap:24px;align-items:center}}
+.header{{background:linear-gradient(110deg,#102d51,#1b4773);border-radius:15px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;min-height:112px}}
+.brand{{font-size:23px;font-weight:800}}.brand small{{font-size:14px;color:#d5e8ff}}.sub{{font-size:12px;color:#d5e8ff;margin-top:5px}}
+.clockweather{{background:#f0f6ff;color:#102d51;padding:7px 14px;border-radius:12px;display:flex;gap:24px;align-items:center}}
 .clock{{font-size:24px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}}.small{{font-size:12px;color:#526a85}}.weather{{border-left:1px solid #c8d9eb;padding-left:20px;font-size:18px;font-weight:800}}
-.status{{font-size:13px;font-weight:700}}@media(max-width:850px){{.header{{padding:14px}}.brand{{font-size:21px}}.status{{display:none}}}}
-</style><div class='header'><div><div class='brand'>✈ Travel Planner <small>V6.1</small></div><div class='sub'>Mes voyages · Ma carte · Mes découvertes</div></div>
+.kpis{{display:flex;gap:7px;align-items:center;flex-wrap:wrap}}.kpi{{display:flex;align-items:center;gap:8px;background:#f4f8ff;color:#102d51;border-radius:10px;padding:9px 12px;min-width:100px}}.kpi-icon{{font-size:23px}}.kpi-num{{font-size:22px;font-weight:800;line-height:1}}.kpi-label{{font-size:11px;font-weight:700;margin-top:4px}}.mini-cal{{background:#f4f8ff;color:#15385e;border-radius:12px;padding:8px 10px;width:224px;flex-shrink:0}}.mini-cal-head{{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px;margin-bottom:5px}}.mini-cal-head button{{border:0;background:#dbeafe;border-radius:6px;cursor:pointer;padding:2px 8px;color:#17416b;font-size:15px}}.mini-cal-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}}.mini-cal-grid span{{font-size:10px;line-height:20px;min-height:20px;border-radius:5px}}.mini-cal-grid .dow{{color:#6884a4;font-weight:700}}.mini-cal-grid .has-trip{{background:#f9bdc3;color:#7d2230;font-weight:800}}.mini-cal-grid .today{{outline:2px solid #2683e8}}@media(max-width:850px){{.header{{padding:14px}}.brand{{font-size:21px}}.status{{display:none}}}}
+</style><div class='header'><div><div class='brand'>Vue d’ensemble de mes voyages</div><div class='sub'>✈️ Travel Planner · Tableau de bord</div></div>
 <div class='clockweather'><div><div class='small' id='today'>Heure de France</div><div class='clock' id='clock'>--:--:--</div><div class='small'>🇫🇷 Europe/Paris</div></div><div class='weather'><div class='small'>Paris</div>{symbol} {temp}<div class='small'>Météo actuelle</div></div></div>
-<div class='status'>{count_past} visités · {count_future} programmés · {count_wish} envies</div></div>
-<script>function tick(){{let d=new Date();document.getElementById('clock').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}}).format(d);document.getElementById('today').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'}}).format(d)}}tick();setInterval(tick,1000);</script></html>"""
+<div class='kpis'>
+<div class='kpi'><span class='kpi-icon'>🌐</span><div><div class='kpi-num'>{len(all_trips)}</div><div class='kpi-label'>Voyages</div></div></div>
+<div class='kpi'><span class='kpi-icon'>📍</span><div><div class='kpi-num'>{len({norm(part) for t in all_trips for part in split_destinations(t.get('name','')) if norm(part) in coords()})}</div><div class='kpi-label'>Villes</div></div></div>
+<div class='kpi'><span class='kpi-icon'>📷</span><div><div class='kpi-num'>{count_past}</div><div class='kpi-label'>Visités</div></div></div>
+<div class='kpi'><span class='kpi-icon'>🎈</span><div><div class='kpi-num'>{count_future}</div><div class='kpi-label'>À venir</div></div></div>
+</div>
+<div class='mini-cal'><div class='mini-cal-head'><button onclick='moveMonth(-1)' aria-label='Mois précédent'>‹</button><span id='cal-month'>Calendrier</span><button onclick='moveMonth(1)' aria-label='Mois suivant'>›</button></div><div class='mini-cal-grid' id='cal-grid'></div></div>
+</div>
+<script>
+const trips={calendar_events_json};const nowParis=new Date(new Date().toLocaleString('en-US',{{timeZone:'Europe/Paris'}}));let cy=nowParis.getFullYear(),cm=nowParis.getMonth();
+function moveMonth(delta){{let d=new Date(cy,cm+delta,1);cy=d.getFullYear();cm=d.getMonth();drawCalendar()}}
+function drawCalendar(){{document.getElementById('cal-month').textContent=new Intl.DateTimeFormat('fr-FR',{{month:'long',year:'numeric'}}).format(new Date(cy,cm,1));let g=document.getElementById('cal-grid');g.innerHTML='';for(let n of ['L','M','M','J','V','S','D']){{let e=document.createElement('span');e.className='dow';e.textContent=n;g.appendChild(e)}}let first=(new Date(cy,cm,1).getDay()+6)%7;let days=new Date(cy,cm+1,0).getDate();for(let k=0;k<first;k++)g.appendChild(document.createElement('span'));for(let day=1;day<=days;day++){{let e=document.createElement('span');let key=cy+'-'+String(cm+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');e.textContent=day;if(trips[key]){{e.classList.add('has-trip');e.title=trips[key].join(', ')}}if(cy===nowParis.getFullYear()&&cm===nowParis.getMonth()&&day===nowParis.getDate())e.classList.add('today');g.appendChild(e)}}}}drawCalendar();
+function tick(){{let d=new Date();document.getElementById('clock').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}}).format(d);document.getElementById('today').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'}}).format(d)}}tick();setInterval(tick,1000);</script></html>"""
 if section == '📊 Tableau de bord':
-    components.html(header_html,height=123,scrolling=False)
-    st.header('Vue d’ensemble de mes voyages')
-    mc=st.columns(4)
-    for c,(icon,label,num,sub) in zip(mc,[('🌐','Voyages',len(all_trips),'enregistrés'),('📍','Villes',len({norm(part) for t in all_trips for part in split_destinations(t.get('name','')) if norm(part) in coords()}),'destinations localisées'),('📷','Visités',count_past,'voyages réalisés'),('🎈','À venir',count_future,'voyages programmés')]):
-        with c:
-            st.markdown(f'<div class="tp-kpi"><span class="tp-icon">{icon}</span><div><strong>{num}</strong><b>{label}</b><br><small>{sub}</small></div></div>',unsafe_allow_html=True)
+    components.html(header_html,height=205,scrolling=False)
     years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
     left,right=st.columns(2)
     with left:
@@ -378,10 +408,14 @@ if section == '📊 Tableau de bord':
             country=country_for(part,trip.get('country',''))
             if country:country_counts[country]+=1
             else:unknown_countries.append(part)
+    if unknown_countries:
+        country_counts['Pays à préciser'] += len(unknown_countries)
     if country_counts:
-        colors=['#1976d2','#ff8229','#f2b900','#21ad85','#7157eb','#ff5c7a','#a5b7d0','#5d8ad5','#e8a5b8','#54a3a3']
-        pairs=country_counts.most_common(7)
-        if len(country_counts)>7:pairs.append(('Autres',sum(v for _,v in country_counts.most_common()[7:])))
+        colors=['#1976d2','#ff8229','#f2b900','#21ad85','#7157eb','#ff5c7a','#a5b7d0','#5d8ad5','#e8a5b8','#94a3b8']
+        identified=[(k,v) for k,v in country_counts.most_common() if k!='Pays à préciser']
+        pairs=identified[:7]
+        if len(identified)>7:pairs.append(('Autres',sum(v for _,v in identified[7:])))
+        if country_counts.get('Pays à préciser'):pairs.append(('Pays à préciser',country_counts['Pays à préciser']))
         total=sum(country_counts.values());cur=0;stops=[];legend=[]
         for i,(country,n) in enumerate(pairs):
             pct=100*n/total
@@ -390,7 +424,7 @@ if section == '📊 Tableau de bord':
         donut=f'<div class="tp-donut" style="background:conic-gradient({",".join(stops)})"><div class="tp-donut-center"><b>{total}</b><small>villes identifiées</small></div></div>'
         st.markdown('<div class="tp-panel"><div class="tp-country-layout">'+donut+'<div class="tp-legend">'+''.join(legend)+'</div></div></div>',unsafe_allow_html=True)
     if unknown_countries:
-        st.caption(f'{len(unknown_countries)} intitulé(s) sans pays fiable, exclus du graphique plutôt que classés à tort. Aucune donnée Supabase modifiée.')
+        st.caption(f'{len(unknown_countries)} destination(s) sans pays identifié, affichées dans « Pays à préciser ». Total préservé, aucun pays inventé et aucune donnée Supabase modifiée.')
 
 if section == '🗺️ Carte & voyages':
     tab_map,tab_list,tab_add,tab_import,tab_places=st.tabs(['🗺️ Carte','📋 Mes destinations','➕ Ajouter / modifier','📥 Import TXT','🏛️ Lieux à découvrir'])
@@ -477,24 +511,6 @@ if section == '🗺️ Carte & voyages':
         else:st.info('Aucun catalogue local disponible.')
 
 
-if section == '📅 Calendrier':
-    st.subheader('📅 Calendrier de mes voyages')
-    if 'cal_year' not in st.session_state:st.session_state.cal_year=date.today().year
-    if 'cal_month' not in st.session_state:st.session_state.cal_month=date.today().month
-    a,b,c=st.columns([1,4,1])
-    if a.button('← Mois précédent'):
-        v=date(st.session_state.cal_year,st.session_state.cal_month,1)-timedelta(days=1)
-        st.session_state.cal_year,st.session_state.cal_month=v.year,v.month
-    b.markdown(f'<h3 style="text-align:center">{calendar.month_name[st.session_state.cal_month]} {st.session_state.cal_year}</h3>',unsafe_allow_html=True)
-    if c.button('Mois suivant →'):
-        y,m=st.session_state.cal_year,st.session_state.cal_month
-        st.session_state.cal_year,st.session_state.cal_month=(y+1,1) if m==12 else (y,m+1)
-    st.markdown(render_calendar(all_trips,st.session_state.cal_year,st.session_state.cal_month),unsafe_allow_html=True)
-    st.caption('Les voyages datés apparaissent sur leur jour de départ. Les voyages sans date restent dans Mes destinations.')
-    dated=[{'Destination':t.get('name'),'Début':t.get('start'),'Fin':t.get('end'),'Statut':original_status(t)} for t in all_trips if t.get('start')]
-    with st.expander('Voir les voyages en liste'):
-        st.dataframe(pd.DataFrame(sorted(dated,key=lambda x:x['Début'])),hide_index=True,use_container_width=True)
-
 if section == '🌦️ Météo':
     st.subheader('🌦️ Météo des destinations · 14 jours')
     wc1,wc2=st.columns([4,1])
@@ -530,7 +546,9 @@ if section == '💡 Idées':
         cols=st.columns(3)
         for col,cityname in zip(cols,suggestions[offset:offset+3]):
             with col:
-                st.markdown(f'<div class="tp-idea"><b>{COUNTRY_FLAGS.get(country,"🌍")} {safe(cityname)}</b><p>Nouvelle destination à explorer · {safe(country)}</p></div>',unsafe_allow_html=True)
+                photo=city_photo(cityname)
+                picture=f'<img src="{safe(photo)}" alt="Vue de {safe(cityname)}" class="tp-city-photo">' if photo else '<div class="tp-city-placeholder">✈️ Découvrir</div>'
+                st.markdown(f'<div class="tp-idea tp-idea-photo">{picture}<div class="tp-idea-content"><b>{flag_html(country)} &nbsp; {safe(cityname)}</b><p>Nouvelle destination à explorer · {safe(country)}</p></div></div>',unsafe_allow_html=True)
                 if st.button('♡ Ajouter à mes envies',key='idea_'+country+'_'+cityname):
                     item={'id':str(uuid.uuid4()),'name':cityname,'country':country,'kind':'wish','start':'','end':'','notes':'Idée de destination','lat':None,'lon':None}
                     upsert_trips([item]);st.session_state.trips.append(item);st.rerun()
@@ -562,3 +580,37 @@ if section == '🏛️ Visites':
         st.download_button('⬇️ Exporter mon programme (TXT)',f'Programme de visites — {city} ({duration})\n\n'+'\n'.join(f'{i}. {name}' for i,name in enumerate(names,1)),file_name='programme-visites.txt')
     else:
         st.info(f'Aucun lieu détaillé en cache pour {city}. Tu peux consulter « Lieux à découvrir » pour les villes déjà enregistrées dans le catalogue local.')
+
+st.markdown('''<style>
+/* Réduire la barre blanche de Streamlit, sans masquer le bouton d'ouverture du menu. */
+header[data-testid="stHeader"]{height:2.5rem;background:#f2f6fd}
+.block-container{padding-top:1rem!important}
+[data-testid="stSidebar"] .stRadio label{width:100%!important}
+[data-testid="stSidebar"] div[role="radiogroup"] label{width:100%!important;display:flex}
+.tp-city-photo{display:block;width:100%;height:150px;object-fit:cover;border-radius:14px 14px 0 0}
+.tp-city-placeholder{height:150px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#dbeafe,#a7d7e9);color:#235480;font-weight:700;border-radius:14px 14px 0 0}
+.tp-idea-photo{overflow:hidden;padding:0!important}
+.tp-idea-content{padding:14px}
+.tp-idea-photo .tp-idea-content p{margin-bottom:0}
+</style>''',unsafe_allow_html=True)
+
+# Menu latéral uniforme : six boutons de même largeur, hauteur et espacement.
+st.markdown('''<style>
+section[data-testid="stSidebar"] div[role="radiogroup"]{
+ display:flex!important;flex-direction:column!important;gap:8px!important;width:100%!important;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;
+ width:100%!important;min-width:100%!important;max-width:100%!important;
+ min-height:48px!important;height:48px!important;margin:0!important;
+ padding:0 14px!important;border-radius:11px!important;
+ font-size:14px!important;font-weight:600!important;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child{
+ display:none!important;
+}
+section[data-testid="stSidebar"] div[role="radiogroup"] > label p{
+ margin:0!important;white-space:nowrap!important;
+}
+section[data-testid="stSidebar"] div[data-testid="stRadio"]{width:100%!important}
+</style>''',unsafe_allow_html=True)
