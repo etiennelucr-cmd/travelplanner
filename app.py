@@ -225,6 +225,15 @@ def render_calendar(trips,yr,mo):
             chips=''.join(f'<div class="tp-cal-chip" title="{safe(t.get("name",""))}">{safe(t.get("name",""))[:14]}</div>' for t in active[:2])
             cells+=f'<div class="tp-cal-cell{cl}"><b>{day.day}</b>{chips}</div>'
     return '<div class="tp-calendar">'+cells+'</div>'
+st.markdown('''<style>
+/* V7.6: Streamlit component outer iframe, not only inner HTML. */
+@media(max-width:700px){
+ [data-testid="stCustomComponent"] iframe,
+ iframe[title="streamlit.components.v1.html"],
+ iframe[title="streamlit.components.v1.html"]:first-child{height:405px!important;min-height:405px!important;max-height:none!important;display:block!important}
+ [data-testid="stCustomComponent"]:has(iframe[title="streamlit.components.v1.html"]){min-height:405px!important;height:405px!important;overflow:visible!important}
+}
+</style>''', unsafe_allow_html=True)
 st.markdown("""<style>
 .stApp {background:#f2f6fd;color:#0b2346}
 [data-testid="stSidebar"] {background:#193a5b}
