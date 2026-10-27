@@ -15,6 +15,16 @@ import streamlit as st
 
 ROOT = Path(__file__).parent
 st.set_page_config(page_title='Travel Planner V6.1', page_icon='🧭', layout='wide')
+st.markdown('''<style>
+section[data-testid="stSidebar"]{background:linear-gradient(180deg,#102f53,#193e62);color:white}
+section[data-testid="stSidebar"] *{color:inherit}
+section[data-testid="stSidebar"] div[role="radiogroup"] label{background:#254b6d;border-radius:11px;padding:11px 10px;margin:3px 0;transition:background .15s}
+section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked){background:#087bce!important;color:white!important}
+section[data-testid="stSidebar"] div[role="radiogroup"] label:hover{background:#35648b}
+.tp-idea{border-radius:16px!important;box-shadow:0 3px 12px #0c33520c}
+.tp-panel,.tp-kpi{box-shadow:0 4px 16px #0c33520b}
+</style>''',unsafe_allow_html=True)
+
 
 # Protection de l'interface avant tout accès aux données Supabase.
 def require_login():
@@ -22,10 +32,6 @@ def require_login():
         st.error('Configurez APP_PASSWORD dans les Secrets Streamlit avant de continuer.')
         st.stop()
     if st.session_state.get('authenticated', False):
-        with st.sidebar:
-            if st.button('🔒 Se déconnecter'):
-                st.session_state.authenticated = False
-                st.rerun()
         return
     st.title('🔒 Travel Planner — Connexion')
     with st.form('login_form'):
@@ -266,6 +272,10 @@ def htmlsafe(value):
     return html.escape(str(value))
 
 with st.sidebar:
+    st.markdown('## ✈️ Travel Planner')
+    section=st.radio('Navigation', ['📊 Tableau de bord','🗺️ Carte & voyages','🏛️ Visites','🌦️ Météo','💡 Idées','📅 Calendrier'],label_visibility='collapsed',key='tp_navigation')
+    st.divider()
+    st.caption('OUTILS & SAUVEGARDE')
     st.header('Sauvegarde et restauration')
     st.download_button('⬇️ Télécharger mes voyages (JSON)',json.dumps(st.session_state.trips,ensure_ascii=False,indent=2).encode('utf-8'),'trips-sauvegarde.json','application/json',use_container_width=True)
     up=st.file_uploader('Restaurer un fichier trips.json',type=['json'])
@@ -279,10 +289,11 @@ with st.sidebar:
             upsert_trips(data)
             st.session_state.trips=fetch_trips();st.success(f'{len(data)} voyages importés dans Supabase (sans supprimer les autres).');st.rerun()
         except Exception as e: st.error(str(e))
+
     st.divider()
-    st.metric('Voyages enregistrés',len(st.session_state.trips))
-    st.metric('Déjà effectués',sum(x.get('kind')=='past' for x in st.session_state.trips))
-    st.metric('À venir',sum(original_status(x)=='scheduled' for x in st.session_state.trips))
+    if st.button('🔒 Se déconnecter',use_container_width=True):
+        st.session_state.authenticated=False
+        st.rerun()
 
 
 from datetime import date
@@ -323,143 +334,150 @@ header_html=f"""<!doctype html><html lang='fr'><meta charset='utf-8'><style>
 <div class='clockweather'><div><div class='small' id='today'>Heure de France</div><div class='clock' id='clock'>--:--:--</div><div class='small'>🇫🇷 Europe/Paris</div></div><div class='weather'><div class='small'>Paris</div>{symbol} {temp}<div class='small'>Météo actuelle</div></div></div>
 <div class='status'>{count_past} visités · {count_future} programmés · {count_wish} envies</div></div>
 <script>function tick(){{let d=new Date();document.getElementById('clock').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}}).format(d);document.getElementById('today').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'}}).format(d)}}tick();setInterval(tick,1000);</script></html>"""
-components.html(header_html,height=123,scrolling=False)
-st.header('Vue d’ensemble de mes voyages')
-mc=st.columns(4)
-for c,(icon,label,num,sub) in zip(mc,[('🌐','Voyages',len(all_trips),'enregistrés'),('📍','Villes',len({norm(part) for t in all_trips for part in split_destinations(t.get('name','')) if norm(part) in coords()}),'destinations localisées'),('📷','Visités',count_past,'voyages réalisés'),('🎈','À venir',count_future,'voyages programmés')]):
-    with c:
-        st.markdown(f'<div class="tp-kpi"><span class="tp-icon">{icon}</span><div><strong>{num}</strong><b>{label}</b><br><small>{sub}</small></div></div>',unsafe_allow_html=True)
-years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
-left,right=st.columns(2)
-with left:
-    st.subheader('Voyages par année')
-    if years:
-        highest=max(years.values())
-        bars=''.join(f'<div class="tp-bar-wrap"><b>{years[y]}</b><div class="tp-bar" style="height:{max(3,round(years[y]/highest*155))}px"></div><span>{htmlsafe(y)}</span></div>' for y in sorted(years))
-        st.markdown('<div class="tp-panel"><div class="tp-bars">'+bars+'</div></div>',unsafe_allow_html=True)
-with right:
-    st.subheader('Prochains départs')
-    upcoming=sorted([t for t in all_trips if str(t.get('start',''))>=date.today().isoformat() and original_status(t)=='scheduled'],key=lambda t:t['start'])[:8]
-    if not upcoming: st.info('Aucun départ daté à venir.')
-    else:
-        rows=''
-        for t in upcoming:
-            dt=date.fromisoformat(t['start'][:10]);days=(dt-date.today()).days
-            badge='Aujourd’hui' if days==0 else f'Dans {days} jours'
-            rows+=f'<div class="tp-depart"><span class="tp-flag">{flag_for(t)}</span><div><b>{safe(t.get("name",""))}</b><br><small>{dt.strftime("%d/%m/%Y")}</small></div><span class="tp-when">{badge}</span></div>'
-        st.markdown('<div class="tp-panel">'+rows+'</div>',unsafe_allow_html=True)
-st.subheader('Répartition des destinations')
-# Une étape multi-villes compte pour chaque ville ; les inconnues restent hors graphique.
-country_counts=Counter()
-unknown_countries=[]
-for trip in all_trips:
-    parts=split_destinations(trip.get('name',''))
-    for part in parts:
-        country=country_for(part,trip.get('country',''))
-        if country:country_counts[country]+=1
-        else:unknown_countries.append(part)
-if country_counts:
-    colors=['#1976d2','#ff8229','#f2b900','#21ad85','#7157eb','#ff5c7a','#a5b7d0','#5d8ad5','#e8a5b8','#54a3a3']
-    pairs=country_counts.most_common(7)
-    if len(country_counts)>7:pairs.append(('Autres',sum(v for _,v in country_counts.most_common()[7:])))
-    total=sum(country_counts.values());cur=0;stops=[];legend=[]
-    for i,(country,n) in enumerate(pairs):
-        pct=100*n/total
-        stops.append(f'{colors[i%len(colors)]} {cur:.3f}% {cur+pct:.3f}%');cur+=pct
-        legend.append(f'<div class="tp-legend-item"><span class="tp-dot" style="background:{colors[i%len(colors)]}"></span>{safe(country)} <b>{n}</b> ({pct:.0f}%)</div>')
-    donut=f'<div class="tp-donut" style="background:conic-gradient({",".join(stops)})"><div class="tp-donut-center"><b>{total}</b><small>villes identifiées</small></div></div>'
-    st.markdown('<div class="tp-panel"><div class="tp-country-layout">'+donut+'<div class="tp-legend">'+''.join(legend)+'</div></div></div>',unsafe_allow_html=True)
-if unknown_countries:
-    st.caption(f'{len(unknown_countries)} intitulé(s) sans pays fiable, exclus du graphique plutôt que classés à tort. Aucune donnée Supabase modifiée.')
-
-tab_map,tab_list,tab_add,tab_import,tab_places=st.tabs(['🗺️ Carte','📋 Mes destinations','➕ Ajouter / modifier','📥 Import TXT','🏛️ Lieux à découvrir'])
-with tab_map:
-    filt=st.selectbox('Afficher',['Tous','Effectués','À venir'])
-    subset=[x for x in st.session_state.trips if filt=='Tous' or original_status(x)==('past' if filt=='Effectués' else 'scheduled')]
-    pts,missing=local_markers(subset)
-    st.write(f'{len(pts)} marqueurs pour {len(subset)} voyages (les étapes multi-villes peuvent produire plusieurs marqueurs).')
-    if pts:
-        m=folium.Map(location=[47.8,5.4],zoom_start=5,tiles='OpenStreetMap',control_scale=True)
-        colors={'past':'blue','scheduled':'orange','wish':'purple'}
-        for p in pts:
-            match=next((t for t in subset if t.get('name')==p['destination']),{})
-            folium.Marker([p['lat'],p['lon']],popup=folium.Popup(htmlsafe(p['destination']),max_width=260),tooltip=p['destination'],icon=folium.Icon(color=colors.get(original_status(match),'blue'),icon='info-sign')).add_to(m)
-        components.html(m.get_root().render(),height=560,scrolling=False)
-    else: st.info('Aucune coordonnée disponible pour les destinations filtrées.')
-    if missing:
-        with st.expander(f'{len(missing)} intitulés sans ville reconnue'):
-            st.write(', '.join(missing))
-            st.caption('Les intitulés d’événements ne sont pas interprétés comme des villes. Tu peux préciser une ville ou des coordonnées dans Ajouter / modifier.')
-with tab_list:
-    query=st.text_input('Rechercher une destination')
-    subset=[x for x in st.session_state.trips if norm(query) in norm(x.get('name',''))]
-    df=pd.DataFrame([{'Destination':x.get('name',''),'Pays':country_for(x.get('name',''),x.get('country','')),'Statut':{'past':'Effectué','scheduled':'Programmé','wish':'Envie'}[original_status(x)],'Début':x.get('start',''),'Fin':x.get('end',''),'Notes':x.get('notes','')} for x in subset])
-    st.dataframe(df,use_container_width=True,hide_index=True)
-with tab_add:
-    trips=st.session_state.trips
-    options=['➕ Nouveau voyage']+[f"{i+1}. {x.get('name','Sans nom')}" for i,x in enumerate(trips)]
-    selected=st.selectbox('Choisir une fiche',range(len(options)),format_func=lambda i:options[i])
-    old={} if selected==0 else trips[selected-1]
-    with st.form('edit_trip'):
-        name=st.text_input('Destination',value=old.get('name',''))
-        country=st.text_input('Pays',value=old.get('country',''))
-        kind=st.selectbox('Statut',['past','future','wish'],index={'past':0,'scheduled':1,'wish':2}[original_status(old)],format_func=lambda x:{'past':'Effectué','future':'À venir','wish':'Envie'}[x])
-        start=st.text_input('Date de début (AAAA-MM-JJ ou texte)',value=old.get('start',''))
-        end=st.text_input('Date de fin',value=old.get('end',''))
-        notes=st.text_area('Notes',value=old.get('notes',''))
-        a,b=st.columns(2)
-        lat=a.text_input('Latitude (facultatif)',value='' if old.get('lat') is None else str(old['lat']))
-        lon=b.text_input('Longitude (facultatif)',value='' if old.get('lon') is None else str(old['lon']))
-        save=st.form_submit_button('💾 Enregistrer')
-    if save:
-        if not name.strip(): st.error('Indiquez une destination.')
+if section == '📊 Tableau de bord':
+    components.html(header_html,height=123,scrolling=False)
+    st.header('Vue d’ensemble de mes voyages')
+    mc=st.columns(4)
+    for c,(icon,label,num,sub) in zip(mc,[('🌐','Voyages',len(all_trips),'enregistrés'),('📍','Villes',len({norm(part) for t in all_trips for part in split_destinations(t.get('name','')) if norm(part) in coords()}),'destinations localisées'),('📷','Visités',count_past,'voyages réalisés'),('🎈','À venir',count_future,'voyages programmés')]):
+        with c:
+            st.markdown(f'<div class="tp-kpi"><span class="tp-icon">{icon}</span><div><strong>{num}</strong><b>{label}</b><br><small>{sub}</small></div></div>',unsafe_allow_html=True)
+    years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
+    left,right=st.columns(2)
+    with left:
+        st.subheader('Voyages par année')
+        if years:
+            highest=max(years.values())
+            bars=''.join(f'<div class="tp-bar-wrap"><b>{years[y]}</b><div class="tp-bar" style="height:{max(3,round(years[y]/highest*155))}px"></div><span>{htmlsafe(y)}</span></div>' for y in sorted(years))
+            st.markdown('<div class="tp-panel"><div class="tp-bars">'+bars+'</div></div>',unsafe_allow_html=True)
+    with right:
+        st.subheader('Prochains départs')
+        upcoming=sorted([t for t in all_trips if str(t.get('start',''))>=date.today().isoformat() and original_status(t)=='scheduled'],key=lambda t:t['start'])[:8]
+        if not upcoming: st.info('Aucun départ daté à venir.')
         else:
-            try:
-                item=dict(old,id=old.get('id') or str(uuid.uuid4()),name=name.strip(),country=country.strip() or country_for(name),kind=kind,start=start,end=end,notes=notes,lat=float(lat.replace(',','.')) if lat.strip() else None,lon=float(lon.replace(',','.')) if lon.strip() else None)
-                upsert_trips([item])
-                if selected==0: trips.append(item)
-                else: trips[selected-1]=item
-                st.success('Fiche enregistrée dans Supabase.');st.rerun()
-            except ValueError: st.error('Latitude ou longitude invalide.')
-    if selected and st.button('🗑️ Supprimer cette fiche'):
-        delete_trip(trips[selected-1]['id'])
-        trips.pop(selected-1);st.rerun()
-with tab_import:
-    st.write('Importer une liste simple : `Ville | Date | Statut` (une destination par ligne). Les formats Google Keep complexes peuvent nécessiter une vérification manuelle.')
-    txt=st.file_uploader('Fichier TXT',type=['txt'],key='txt')
-    if txt:
-        raw=txt.getvalue().decode('utf-8-sig',errors='replace')
-        incoming=[];existing={(norm(x.get('name','')),x.get('start','')) for x in st.session_state.trips}
-        for line in raw.splitlines():
-            line=line.strip(' \t-•')
-            if not line:continue
-            parts=[p.strip() for p in line.split('|')]
-            name=parts[0];date=parts[1] if len(parts)>1 else ''
-            if not name:continue
-            if (norm(name),date) in existing:continue
-            status=parts[2].lower() if len(parts)>2 else ''
-            kind='past' if any(w in status for w in ['fait','effectu','pass','✅','visité']) else ('wish' if not date else 'future')
-            incoming.append(dict(id=str(uuid.uuid4()),name=name,country='',kind=kind,start=date,end='',notes='',lat=None,lon=None))
-            existing.add((norm(name),date))
-        st.write(f'{len(incoming)} nouvelles lignes détectées')
-        st.dataframe(pd.DataFrame(incoming)[['name','start','kind']] if incoming else pd.DataFrame(),hide_index=True)
-        if incoming and st.button('Confirmer l’import'):
-            upsert_trips(incoming)
-            st.session_state.trips.extend(incoming);st.rerun()
-with tab_places:
-    places=read_json(ROOT/'data'/'places-local.json',{})
-    keys=sorted(places)
-    if keys:
-        city=st.selectbox('Ville avec des lieux pré-enregistrés',keys)
-        entries=places[city]
-        st.dataframe(pd.DataFrame([{'Lieu':e.get('tags',{}).get('name','Sans nom'),'Type':e.get('tags',{}).get('tourism',''),'Latitude':e.get('lat'),'Longitude':e.get('lon')} for e in entries]),hide_index=True,use_container_width=True)
-    else:st.info('Aucun catalogue local disponible.')
+            rows=''
+            for t in upcoming:
+                dt=date.fromisoformat(t['start'][:10]);days=(dt-date.today()).days
+                badge='Aujourd’hui' if days==0 else f'Dans {days} jours'
+                weather_note=''
+                if 0<=days<=13:
+                    try:
+                        place,wx=forecast_city(split_destinations(t.get('name',''))[0])
+                        daily=wx.get('daily',{}); idx=daily.get('time',[]).index(dt.isoformat())
+                        weather_note=f' · {weather_symbol(daily["weather_code"][idx])} {round(daily["temperature_2m_max"][idx])}°C (prévision)'
+                    except Exception: weather_note=' · météo indisponible'
+                else: weather_note=' · météo à venir (prévisions non disponibles)'
+                rows+=f'<div class="tp-depart"><span class="tp-flag">{flag_for(t)}</span><div><b>{safe(t.get("name",""))}</b><br><small>{dt.strftime("%d/%m/%Y")}{safe(weather_note)}</small></div><span class="tp-when">{badge}</span></div>'
+            st.markdown('<div class="tp-panel">'+rows+'</div>',unsafe_allow_html=True)
+    st.subheader('Répartition des destinations')
+    # Une étape multi-villes compte pour chaque ville ; les inconnues restent hors graphique.
+    country_counts=Counter()
+    unknown_countries=[]
+    for trip in all_trips:
+        parts=split_destinations(trip.get('name',''))
+        for part in parts:
+            country=country_for(part,trip.get('country',''))
+            if country:country_counts[country]+=1
+            else:unknown_countries.append(part)
+    if country_counts:
+        colors=['#1976d2','#ff8229','#f2b900','#21ad85','#7157eb','#ff5c7a','#a5b7d0','#5d8ad5','#e8a5b8','#54a3a3']
+        pairs=country_counts.most_common(7)
+        if len(country_counts)>7:pairs.append(('Autres',sum(v for _,v in country_counts.most_common()[7:])))
+        total=sum(country_counts.values());cur=0;stops=[];legend=[]
+        for i,(country,n) in enumerate(pairs):
+            pct=100*n/total
+            stops.append(f'{colors[i%len(colors)]} {cur:.3f}% {cur+pct:.3f}%');cur+=pct
+            legend.append(f'<div class="tp-legend-item"><span class="tp-dot" style="background:{colors[i%len(colors)]}"></span>{safe(country)} <b>{n}</b> ({pct:.0f}%)</div>')
+        donut=f'<div class="tp-donut" style="background:conic-gradient({",".join(stops)})"><div class="tp-donut-center"><b>{total}</b><small>villes identifiées</small></div></div>'
+        st.markdown('<div class="tp-panel"><div class="tp-country-layout">'+donut+'<div class="tp-legend">'+''.join(legend)+'</div></div></div>',unsafe_allow_html=True)
+    if unknown_countries:
+        st.caption(f'{len(unknown_countries)} intitulé(s) sans pays fiable, exclus du graphique plutôt que classés à tort. Aucune donnée Supabase modifiée.')
+
+if section == '🗺️ Carte & voyages':
+    tab_map,tab_list,tab_add,tab_import,tab_places=st.tabs(['🗺️ Carte','📋 Mes destinations','➕ Ajouter / modifier','📥 Import TXT','🏛️ Lieux à découvrir'])
+    with tab_map:
+        filt=st.selectbox('Afficher',['Tous','Effectués','À venir'])
+        subset=[x for x in st.session_state.trips if filt=='Tous' or original_status(x)==('past' if filt=='Effectués' else 'scheduled')]
+        pts,missing=local_markers(subset)
+        st.write(f'{len(pts)} marqueurs pour {len(subset)} voyages (les étapes multi-villes peuvent produire plusieurs marqueurs).')
+        if pts:
+            m=folium.Map(location=[47.8,5.4],zoom_start=5,tiles='OpenStreetMap',control_scale=True)
+            colors={'past':'blue','scheduled':'orange','wish':'purple'}
+            for p in pts:
+                match=next((t for t in subset if t.get('name')==p['destination']),{})
+                folium.Marker([p['lat'],p['lon']],popup=folium.Popup(htmlsafe(p['destination']),max_width=260),tooltip=p['destination'],icon=folium.Icon(color=colors.get(original_status(match),'blue'),icon='info-sign')).add_to(m)
+            components.html(m.get_root().render(),height=560,scrolling=False)
+        else: st.info('Aucune coordonnée disponible pour les destinations filtrées.')
+        if missing:
+            with st.expander(f'{len(missing)} intitulés sans ville reconnue'):
+                st.write(', '.join(missing))
+                st.caption('Les intitulés d’événements ne sont pas interprétés comme des villes. Tu peux préciser une ville ou des coordonnées dans Ajouter / modifier.')
+    with tab_list:
+        query=st.text_input('Rechercher une destination')
+        subset=[x for x in st.session_state.trips if norm(query) in norm(x.get('name',''))]
+        df=pd.DataFrame([{'Destination':x.get('name',''),'Pays':country_for(x.get('name',''),x.get('country','')),'Statut':{'past':'Effectué','scheduled':'Programmé','wish':'Envie'}[original_status(x)],'Début':x.get('start',''),'Fin':x.get('end',''),'Notes':x.get('notes','')} for x in subset])
+        st.dataframe(df,use_container_width=True,hide_index=True)
+    with tab_add:
+        trips=st.session_state.trips
+        options=['➕ Nouveau voyage']+[f"{i+1}. {x.get('name','Sans nom')}" for i,x in enumerate(trips)]
+        selected=st.selectbox('Choisir une fiche',range(len(options)),format_func=lambda i:options[i])
+        old={} if selected==0 else trips[selected-1]
+        with st.form('edit_trip'):
+            name=st.text_input('Destination',value=old.get('name',''))
+            country=st.text_input('Pays',value=old.get('country',''))
+            kind=st.selectbox('Statut',['past','future','wish'],index={'past':0,'scheduled':1,'wish':2}[original_status(old)],format_func=lambda x:{'past':'Effectué','future':'À venir','wish':'Envie'}[x])
+            start=st.text_input('Date de début (AAAA-MM-JJ ou texte)',value=old.get('start',''))
+            end=st.text_input('Date de fin',value=old.get('end',''))
+            notes=st.text_area('Notes',value=old.get('notes',''))
+            a,b=st.columns(2)
+            lat=a.text_input('Latitude (facultatif)',value='' if old.get('lat') is None else str(old['lat']))
+            lon=b.text_input('Longitude (facultatif)',value='' if old.get('lon') is None else str(old['lon']))
+            save=st.form_submit_button('💾 Enregistrer')
+        if save:
+            if not name.strip(): st.error('Indiquez une destination.')
+            else:
+                try:
+                    item=dict(old,id=old.get('id') or str(uuid.uuid4()),name=name.strip(),country=country.strip() or country_for(name),kind=kind,start=start,end=end,notes=notes,lat=float(lat.replace(',','.')) if lat.strip() else None,lon=float(lon.replace(',','.')) if lon.strip() else None)
+                    upsert_trips([item])
+                    if selected==0: trips.append(item)
+                    else: trips[selected-1]=item
+                    st.success('Fiche enregistrée dans Supabase.');st.rerun()
+                except ValueError: st.error('Latitude ou longitude invalide.')
+        if selected and st.button('🗑️ Supprimer cette fiche'):
+            delete_trip(trips[selected-1]['id'])
+            trips.pop(selected-1);st.rerun()
+    with tab_import:
+        st.write('Importer une liste simple : `Ville | Date | Statut` (une destination par ligne). Les formats Google Keep complexes peuvent nécessiter une vérification manuelle.')
+        txt=st.file_uploader('Fichier TXT',type=['txt'],key='txt')
+        if txt:
+            raw=txt.getvalue().decode('utf-8-sig',errors='replace')
+            incoming=[];existing={(norm(x.get('name','')),x.get('start','')) for x in st.session_state.trips}
+            for line in raw.splitlines():
+                line=line.strip(' \t-•')
+                if not line:continue
+                parts=[p.strip() for p in line.split('|')]
+                name=parts[0];date=parts[1] if len(parts)>1 else ''
+                if not name:continue
+                if (norm(name),date) in existing:continue
+                status=parts[2].lower() if len(parts)>2 else ''
+                kind='past' if any(w in status for w in ['fait','effectu','pass','✅','visité']) else ('wish' if not date else 'future')
+                incoming.append(dict(id=str(uuid.uuid4()),name=name,country='',kind=kind,start=date,end='',notes='',lat=None,lon=None))
+                existing.add((norm(name),date))
+            st.write(f'{len(incoming)} nouvelles lignes détectées')
+            st.dataframe(pd.DataFrame(incoming)[['name','start','kind']] if incoming else pd.DataFrame(),hide_index=True)
+            if incoming and st.button('Confirmer l’import'):
+                upsert_trips(incoming)
+                st.session_state.trips.extend(incoming);st.rerun()
+    with tab_places:
+        places=read_json(ROOT/'data'/'places-local.json',{})
+        keys=sorted(places)
+        if keys:
+            city=st.selectbox('Ville avec des lieux pré-enregistrés',keys)
+            entries=places[city]
+            st.dataframe(pd.DataFrame([{'Lieu':e.get('tags',{}).get('name','Sans nom'),'Type':e.get('tags',{}).get('tourism',''),'Latitude':e.get('lat'),'Longitude':e.get('lon')} for e in entries]),hide_index=True,use_container_width=True)
+        else:st.info('Aucun catalogue local disponible.')
 
 
-st.divider()
-st.header('✨ Explorer & préparer mes voyages')
-t_calendar,t_weather,t_ideas,t_visit=st.tabs(['📅 Calendrier','🌦️ Météo 14 jours','💡 Idées','🏛️ Programme de visites'])
-with t_calendar:
+if section == '📅 Calendrier':
     st.subheader('📅 Calendrier de mes voyages')
     if 'cal_year' not in st.session_state:st.session_state.cal_year=date.today().year
     if 'cal_month' not in st.session_state:st.session_state.cal_month=date.today().month
@@ -476,7 +494,8 @@ with t_calendar:
     dated=[{'Destination':t.get('name'),'Début':t.get('start'),'Fin':t.get('end'),'Statut':original_status(t)} for t in all_trips if t.get('start')]
     with st.expander('Voir les voyages en liste'):
         st.dataframe(pd.DataFrame(sorted(dated,key=lambda x:x['Début'])),hide_index=True,use_container_width=True)
-with t_weather:
+
+if section == '🌦️ Météo':
     st.subheader('🌦️ Météo des destinations · 14 jours')
     wc1,wc2=st.columns([4,1])
     city=wc1.text_input('Ville',value='Paris',key='weathercity')
@@ -493,11 +512,17 @@ with t_weather:
         st.caption(f'Prévisions pour {place["name"]} ({place.get("country","")}) · Source : Open-Meteo')
         st.markdown('<div class="tp-weather-grid">'+cards+'</div>',unsafe_allow_html=True)
     except Exception as exc:st.warning('Météo temporairement indisponible : '+str(exc))
-with t_ideas:
+
+if section == '💡 Idées':
     st.subheader('💡 Idées de prochaines destinations')
-    st.caption('Suggestions hors de tes voyages, filtrées par pays. Les idées peuvent être ajoutées à tes envies sans modifier les voyages existants.')
+    st.caption('Des villes nouvelles inspirées des pays où tu as déjà voyagé, sans doublons avec tes destinations enregistrées.')
     catalog=read_json(ROOT/'data'/'europe-cities.json',{})
-    country=st.selectbox('Pays',sorted(catalog),key='ideacountry')
+    visited_countries=Counter(country_for(part,t.get('country','')) for t in all_trips for part in split_destinations(t.get('name','')) if original_status(t)=='past')
+    suggested_countries=[c for c,_ in visited_countries.most_common() if c in catalog]
+    choices=['🌟 Suggestions selon mes voyages']+sorted(catalog)
+    selection=st.selectbox('Découvrir',choices,key='ideacountry')
+    country=(suggested_countries[0] if suggested_countries else 'France') if selection==choices[0] else selection
+    if selection==choices[0]: st.caption('Suggestions inspirées de tes pays déjà visités. Choisis un pays pour affiner.')
     existing={norm(part) for t in all_trips for part in split_destinations(t.get('name',''))}
     suggestions=[city for city in catalog.get(country,[]) if norm(city) not in existing]
     st.write(f'**{len(suggestions)} idées** à découvrir en {country} {COUNTRY_FLAGS.get(country,"🌍")}')
@@ -509,7 +534,8 @@ with t_ideas:
                 if st.button('♡ Ajouter à mes envies',key='idea_'+country+'_'+cityname):
                     item={'id':str(uuid.uuid4()),'name':cityname,'country':country,'kind':'wish','start':'','end':'','notes':'Idée de destination','lat':None,'lon':None}
                     upsert_trips([item]);st.session_state.trips.append(item);st.rerun()
-with t_visit:
+
+if section == '🏛️ Visites':
     st.subheader('🏛️ Mon programme de visites')
     st.caption('Prépare une journée culturelle avec les lieux disponibles dans le catalogue local. Horaires et billets à vérifier avant le départ.')
     catalog=read_json(ROOT/'data'/'europe-cities.json',{})
@@ -522,6 +548,16 @@ with t_visit:
         n={'30 min':2,'1 h':3,'2 h':5,'4 h':8,'1 jour':12,'2 jours':20,'3 jours':30}[duration]
         names=[e.get('tags',{}).get('name','Lieu sans nom') for e in results[:n]]
         for i,name in enumerate(names,1):
+            if i>1:
+                a,b=results[i-2],results[i-1]
+                try:
+                    lat1,lon1,lat2,lon2=map(float,(a['lat'],a['lon'],b['lat'],b['lon']))
+                    dlat=math.radians(lat2-lat1);dlon=math.radians(lon2-lon1)
+                    h=math.sin(dlat/2)**2+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.sin(dlon/2)**2
+                    km=6371*2*math.asin(min(1,math.sqrt(h)))
+                    minutes=max(2,round(km*1.3/4.5*60))
+                    st.caption(f'🚶 Étape {i-1} → {i} : environ {minutes} min à pied (estimation à vol d’oiseau × 1,3 ; trajet réel non vérifié)')
+                except (KeyError,ValueError,TypeError): st.caption(f'🚶 Étape {i-1} → {i} : trajet à vérifier sur une carte')
             st.markdown(f'<div class="tp-idea" style="min-height:0;margin:7px 0"><b>{i:02d} · {safe(name)}</b><p>📍 {safe(city)} · {safe(country)} · étape proposée</p></div>',unsafe_allow_html=True)
         st.download_button('⬇️ Exporter mon programme (TXT)',f'Programme de visites — {city} ({duration})\n\n'+'\n'.join(f'{i}. {name}' for i,name in enumerate(names,1)),file_name='programme-visites.txt')
     else:
