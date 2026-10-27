@@ -1,4 +1,6 @@
 import json, re, uuid, unicodedata
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 from pathlib import Path
 import pandas as pd
 import streamlit as st
@@ -32,12 +34,55 @@ def markers(t):
                 lat,lon=d[key];out.append(dict(lat=lat,lon=lon,destination=name,statut=x.get('kind','')))
     return out
 
-if 'trips' not in st.session_state:
-    st.session_state.trips=read_json(ROOT/'data'/'trips.json',[])
+def supabase_request(method, path, payload=None, prefer=None):
+    url = st.secrets["SUPABASE_URL"].rstrip("/") + "/rest/v1/" + path
+    key = st.secrets["SUPABASE_KEY"]
+    headers = {"apikey": key, "Authorization": "Bearer " + key,
+               "Content-Type": "application/json"}
+    if prefer:
+        headers["Prefer"] = prefer
+    body = json.dumps(payload, ensure_ascii=False).encode("utf-8") if payload is not None else None
+    try:
+        with urlopen(Request(url, data=body, headers=headers, method=method), timeout=25) as response:
+            raw = response.read()
+            return json.loads(raw) if raw else None
+    except HTTPError as e:
+        raise RuntimeError(f"Supabase HTTP {e.code}: {e.read().decode('utf-8', errors='replace')[:300]}") from e
+    except URLError as e:
+        raise RuntimeError(f"Connexion Supabase impossible : {e.reason}") from e
+
+def fetch_trips():
+    rows = supabase_request("GET", "travelplanner_trips?select=id,data&order=id&limit=1000")
+    return [row["data"] for row in rows]
+
+def upsert_trips(items):
+    rows = [{"id": str(item["id"]), "data": item} for item in items]
+    for i in range(0, len(rows), 100):
+        supabase_request("POST", "travelplanner_trips?on_conflict=id", rows[i:i+100], "resolution=merge-duplicates,return=minimal")
+
+def delete_trip(trip_id):
+    from urllib.parse import quote
+    supabase_request("DELETE", "travelplanner_trips?id=eq." + quote(str(trip_id), safe=""), prefer="return=minimal")
+
+try:
+    if 'SUPABASE_URL' not in st.secrets or 'SUPABASE_KEY' not in st.secrets:
+        st.error('Configurez SUPABASE_URL et SUPABASE_KEY dans les Secrets de Streamlit Cloud.')
+        st.stop()
+    if 'trips' not in st.session_state:
+        remote = fetch_trips()
+        if not remote:
+            initial = read_json(ROOT/'data'/'trips.json', [])
+            if initial:
+                upsert_trips(initial)
+                remote = fetch_trips()
+        st.session_state.trips = remote
+except Exception as e:
+    st.error(f"Erreur Supabase : {e}. Aucune modification n'a été effectuée localement.")
+    st.stop()
 
 st.title('🧭 Travel Planner V6.1')
 st.caption('Version Streamlit • données initiales importées depuis votre installation Windows')
-st.warning('Sur Streamlit Community Cloud, les changements restent dans cette session. Téléchargez régulièrement votre sauvegarde JSON : sans base de données externe, ils ne sont pas conservés durablement.')
+st.success('☁️ Sauvegarde automatique Supabase activée. Gardez aussi une copie JSON de secours.')
 
 with st.sidebar:
     st.header('Sauvegarde et restauration')
@@ -47,7 +92,11 @@ with st.sidebar:
         try:
             data=json.load(up)
             if not isinstance(data,list): raise ValueError('Le JSON doit contenir une liste')
-            st.session_state.trips=data;st.success(f'{len(data)} voyages restaurés');st.rerun()
+            
+            for item in data:
+                item['id'] = str(item.get('id') or uuid.uuid4())
+            upsert_trips(data)
+            st.session_state.trips=fetch_trips();st.success(f'{len(data)} voyages importés dans Supabase (sans supprimer les autres).');st.rerun()
         except Exception as e: st.error(str(e))
     st.divider()
     st.metric('Voyages enregistrés',len(st.session_state.trips))
@@ -93,11 +142,13 @@ with tab_add:
         else:
             try:
                 item=dict(old,id=old.get('id') or str(uuid.uuid4()),name=name.strip(),country=country,kind=kind,start=start,end=end,notes=notes,lat=float(lat.replace(',','.')) if lat.strip() else None,lon=float(lon.replace(',','.')) if lon.strip() else None)
+                upsert_trips([item])
                 if selected==0: trips.append(item)
                 else: trips[selected-1]=item
-                st.success('Fiche enregistrée dans cette session. Pensez à télécharger la sauvegarde.');st.rerun()
+                st.success('Fiche enregistrée dans Supabase.');st.rerun()
             except ValueError: st.error('Latitude ou longitude invalide.')
     if selected and st.button('🗑️ Supprimer cette fiche'):
+        delete_trip(trips[selected-1]['id'])
         trips.pop(selected-1);st.rerun()
 with tab_import:
     st.write('Importer une liste simple : `Ville | Date | Statut` (une destination par ligne). Les formats Google Keep complexes peuvent nécessiter une vérification manuelle.')
@@ -119,6 +170,7 @@ with tab_import:
         st.write(f'{len(incoming)} nouvelles lignes détectées')
         st.dataframe(pd.DataFrame(incoming)[['name','start','kind']] if incoming else pd.DataFrame(),hide_index=True)
         if incoming and st.button('Confirmer l’import'):
+            upsert_trips(incoming)
             st.session_state.trips.extend(incoming);st.rerun()
 with tab_places:
     places=read_json(ROOT/'data'/'places-local.json',{})
