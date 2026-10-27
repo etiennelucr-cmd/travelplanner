@@ -225,15 +225,16 @@ def render_calendar(trips,yr,mo):
             chips=''.join(f'<div class="tp-cal-chip" title="{safe(t.get("name",""))}">{safe(t.get("name",""))[:14]}</div>' for t in active[:2])
             cells+=f'<div class="tp-cal-cell{cl}"><b>{day.day}</b>{chips}</div>'
     return '<div class="tp-calendar">'+cells+'</div>'
-st.markdown('''<style>
-/* V7.6: Streamlit component outer iframe, not only inner HTML. */
+st.markdown("""<style>
+/* V7.7 : deux composants independants, selectionnes par CSS au niveau Streamlit. */
+.st-key-tp_header_mobile {display:none!important}
 @media(max-width:700px){
- [data-testid="stCustomComponent"] iframe,
- iframe[title="streamlit.components.v1.html"],
- iframe[title="streamlit.components.v1.html"]:first-child{height:405px!important;min-height:405px!important;max-height:none!important;display:block!important}
- [data-testid="stCustomComponent"]:has(iframe[title="streamlit.components.v1.html"]){min-height:405px!important;height:405px!important;overflow:visible!important}
+  .st-key-tp_header_desktop {display:none!important}
+  .st-key-tp_header_mobile {display:block!important}
+  .st-key-tp_header_mobile iframe {height:445px!important;min-height:445px!important;max-height:445px!important}
+  .st-key-tp_header_mobile [data-testid="stCustomComponent"] {height:445px!important;min-height:445px!important}
 }
-</style>''', unsafe_allow_html=True)
+</style>""",unsafe_allow_html=True)
 st.markdown("""<style>
 .stApp {background:#f2f6fd;color:#0b2346}
 [data-testid="stSidebar"] {background:#193a5b}
@@ -458,16 +459,12 @@ function drawCalendar(){{
   g.appendChild(e);
  }}
 }}drawCalendar();
-function updateFrameHeight(){{
- const h=Math.ceil(document.querySelector('.header').getBoundingClientRect().bottom+8);
- window.parent.postMessage({{isStreamlitMessage:true,type:'streamlit:setFrameHeight',height:h}},'*');
-}}
-new ResizeObserver(updateFrameHeight).observe(document.querySelector('.header'));
-window.addEventListener('resize',updateFrameHeight);
-requestAnimationFrame(updateFrameHeight);
 function tick(){{let d=new Date();let md=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',month:'2-digit',day:'2-digit'}}).format(d).split('/');let saint=saints[md[1]+'-'+md[0]];document.getElementById('saint').textContent=saint?'🌼 Saint du jour : '+saint:'🌼 Saint du jour : à consulter';document.getElementById('clock').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}}).format(d);document.getElementById('today').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'}}).format(d)}}tick();setInterval(tick,1000);</script></html>"""
 if section == '📊 Tableau de bord':
-    components.html(header_html,height=185,scrolling=False)
+    with st.container(key='tp_header_desktop'):
+        components.html(header_html,height=185,scrolling=False)
+    with st.container(key='tp_header_mobile'):
+        components.html(header_html,height=445,scrolling=False)
     years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
     left,right=st.columns(2)
     with left:
