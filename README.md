@@ -1,19 +1,15 @@
-# Travel Planner V6.0 — Import corrigé (sans Tailscale)
+# Travel Planner V6.1 — Streamlit
 
-Correctif pour l’erreur `Cannot read properties of undefined (reading toLowerCase)` lors de l’import.
+## Lancement local
+`pip install -r requirements.txt` puis `streamlit run app.py`.
 
-- Prend en charge les lignes `Ville | Date | Statut` du fichier `villes_voyages(1).txt`, ainsi que le format Google Keep.
-- Sépare noms, dates et statuts, notamment les dates en intervalle et les dates indicatives.
-- Ignore les doublons de nom et date.
-- Protège l’affichage contre les fiches sans nom.
-- Reste accessible uniquement via `http://localhost:8787/` ; aucune fonction Tailscale.
+## Publication
+1. Créer un dépôt GitHub privé et y déposer les fichiers de ce dossier (attention : `data/trips.json` contient vos informations personnelles).
+2. Dans Streamlit Community Cloud, choisir **Create app**, le dépôt, la branche et `app.py`.
+3. Déployer puis ouvrir le lien fourni par Streamlit.
 
-## Installation sans perdre les voyages
+## Données
+118 voyages de l’archive sont inclus. **Les modifications dans l'application ne sont pas persistantes** sur Streamlit Cloud : utilisez le bouton de sauvegarde JSON et restaurez votre fichier à la prochaine session. Pour une sauvegarde automatique multi-appareils, il faudra ajouter une base de données persistante et une authentification.
 
-1. Fermer le serveur actuel.
-2. Décompresser cette archive dans un nouveau dossier.
-3. Copier **depuis votre ancienne installation** `data/trips.json`, `data/records.json`, et `data/places-cache.json` si présent. Ne pas copier les fichiers de catalogue par-dessus les nouveaux.
-4. Démarrer `Lancer-TravelPlanner-V5.9.bat`, puis actualiser avec Ctrl+F5.
-5. Dans Mes destinations, cliquer « Importer liste Voyages (.txt) » et sélectionner votre fichier. Vérifier le nombre de nouveaux voyages avant confirmation.
-
-**Attention** : l’import ajoute les voyages manquants ; il ne remplace pas ni ne corrige automatiquement les fiches existantes. Il est prudent de sauvegarder le dossier `data` avant import.
+## Portée
+Cette version est une adaptation fonctionnelle simplifiée, **pas une reproduction exacte** de l'interface JavaScript originale. Les fonctions météo, itinéraires et géocodage en ligne ne sont pas migrées. La carte utilise les coordonnées de centres-villes fournies par le correctif V6.1.
