@@ -1,4 +1,4 @@
-import json, re, uuid, unicodedata
+import json, re, uuid, unicodedata, hmac
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 from pathlib import Path
@@ -7,6 +7,31 @@ import streamlit as st
 
 ROOT = Path(__file__).parent
 st.set_page_config(page_title='Travel Planner V6.1', page_icon='🧭', layout='wide')
+
+# Protection de l'interface avant tout accès aux données Supabase.
+def require_login():
+    if 'APP_PASSWORD' not in st.secrets or not str(st.secrets['APP_PASSWORD']).strip():
+        st.error('Configurez APP_PASSWORD dans les Secrets Streamlit avant de continuer.')
+        st.stop()
+    if st.session_state.get('authenticated', False):
+        with st.sidebar:
+            if st.button('🔒 Se déconnecter'):
+                st.session_state.authenticated = False
+                st.rerun()
+        return
+    st.title('🔒 Travel Planner — Connexion')
+    with st.form('login_form'):
+        password = st.text_input('Mot de passe', type='password')
+        submit = st.form_submit_button('Se connecter')
+    if submit:
+        if hmac.compare_digest(password.encode('utf-8'), str(st.secrets['APP_PASSWORD']).encode('utf-8')):
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error('Mot de passe incorrect.')
+    st.stop()
+
+require_login()
 
 def norm(s):
     return ''.join(c for c in unicodedata.normalize('NFKD', str(s).lower()) if not unicodedata.combining(c)).strip()
