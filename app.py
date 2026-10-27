@@ -3,6 +3,10 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 from pathlib import Path
 import pandas as pd
+import folium
+import streamlit.components.v1 as components
+from collections import Counter
+from datetime import date, datetime
 import streamlit as st
 
 ROOT = Path(__file__).parent
@@ -106,17 +110,44 @@ except Exception as e:
     st.stop()
 
 st.markdown("""<style>
-.stApp {background:#f3f7fc;color:#10234a}
-[data-testid="stSidebar"] {background:#173858}
-[data-testid="stSidebar"] * {color:#f0f7ff}
-h1,h2,h3 {color:#102f50}
-[data-testid="stMetric"] {background:white;border:1px solid #d6e5f7;border-radius:12px;padding:16px}
+.stApp {background:#f2f6fd;color:#0b2346}
+[data-testid="stSidebar"] {background:#193a5b}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2,
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h3,
+[data-testid="stSidebar"] label {color:#fff!important}
+[data-testid="stSidebar"] [data-testid="stMetric"] {background:#254b6b!important;border:1px solid #41617f!important}
+[data-testid="stSidebar"] [data-testid="stMetric"] * {color:#fff!important}
+[data-testid="stSidebar"] button {background:#254b6b!important;color:#fff!important;border:1px solid #476a8b!important}
+[data-testid="stSidebar"] button * {color:#fff!important}
+[data-testid="stSidebar"] [data-testid="stFileUploader"] {background:#254b6b;border-radius:10px;padding:10px}
+h1,h2,h3 {color:#0b2346}
+[data-testid="stMetric"] {background:white;border:1px solid #d0e1f7;border-radius:12px;padding:16px}
 .stTabs [data-baseweb="tab-list"] {background:#e8f1fa;border-radius:12px;flex-wrap:wrap}
 .stTabs [data-baseweb="tab"] {font-weight:650}
-</style>""", unsafe_allow_html=True)
-st.title('✈ Travel Planner — Tableau de bord')
-st.caption('Version Streamlit • données initiales importées depuis votre installation Windows')
-st.success('☁️ Sauvegarde automatique Supabase activée. Gardez aussi une copie JSON de secours.')
+.tp-header{background:#173858;color:white;padding:16px 22px;border-radius:13px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.tp-header h1{color:white;font-size:30px;margin:0}.tp-header small{color:#d4e6f9}
+.tp-clock{background:#edf5ff;color:#102e50;padding:12px 20px;border-radius:12px;font-weight:700}
+.tp-kpi{background:white;border:1px solid #cbdff7;border-radius:13px;padding:18px;min-height:120px;display:flex;gap:15px;align-items:center}
+.tp-kpi .tp-icon{font-size:28px;background:#e6f1ff;border-radius:50%;padding:10px}
+.tp-kpi strong{font-size:30px;color:#0b2346;display:block;line-height:1.1}.tp-kpi small{color:#496889}
+.tp-panel{background:white;border:1px solid #d0e1f7;border-radius:13px;padding:20px;margin-top:12px}
+.tp-bars{display:flex;align-items:end;gap:15px;height:205px;border-bottom:1px solid #cbdff7;padding:10px 10px 0}
+.tp-bar-wrap{flex:1;display:flex;flex-direction:column;justify-content:end;align-items:center;height:100%;font-size:12px}
+.tp-bar{width:68%;max-width:65px;background:linear-gradient(#59adff,#2a83e8);border-radius:5px 5px 0 0}
+.tp-depart{padding:10px 0;border-bottom:1px solid #e0e9f5}
+</style>""",unsafe_allow_html=True)
+
+def original_status(t):
+    if t.get('kind') == 'past':
+        return 'past'
+    if t.get('start') and not re.search(r'Projet / souhait',str(t.get('notes') or ''),re.I):
+        return 'scheduled'
+    return 'wish'
+
+def htmlsafe(value):
+    import html
+    return html.escape(str(value))
 
 with st.sidebar:
     st.header('Sauvegarde et restauration')
@@ -135,7 +166,7 @@ with st.sidebar:
     st.divider()
     st.metric('Voyages enregistrés',len(st.session_state.trips))
     st.metric('Déjà effectués',sum(x.get('kind')=='past' for x in st.session_state.trips))
-    st.metric('À venir',sum(x.get('kind')=='future' for x in st.session_state.trips))
+    st.metric('À venir',sum(original_status(x)=='scheduled' for x in st.session_state.trips))
 
 
 from datetime import date
@@ -154,31 +185,50 @@ if 'records' not in st.session_state:
     except Exception as exc: st.warning('Carnets et budgets non chargés : '+str(exc));st.session_state.records={'budgets':{},'journals':{}}
 
 all_trips=st.session_state.trips
-count_past=sum(t.get('kind')=='past' for t in all_trips)
-count_future=sum(t.get('kind') in ('future','scheduled') for t in all_trips)
-count_wish=sum(t.get('kind')=='wish' for t in all_trips)
+count_past=sum(original_status(t)=='past' for t in all_trips)
+count_future=sum(original_status(t)=='scheduled' for t in all_trips)
+count_wish=sum(original_status(t)=='wish' for t in all_trips)
+now=datetime.now()
+st.markdown(f"""<div class='tp-header'><div><h1>✈ Travel Planner <small>V6.1</small></h1><small>Mes voyages · Ma carte · Mes découvertes</small></div><div class='tp-clock'>📅 {now.strftime('%d/%m/%Y')} &nbsp; 🕒 {now.strftime('%H:%M')}</div><div><b>{count_past} visités · {count_future} programmés · {count_wish} envies</b></div></div>""",unsafe_allow_html=True)
+st.header('Vue d’ensemble de mes voyages')
 mc=st.columns(4)
-for c,(label,num) in zip(mc,[('Voyages réalisés',count_past),('Programmés',count_future),('Destinations envisagées',count_wish),('Entrées au total',len(all_trips))]):c.metric(label,num)
-with st.expander('📊 Vue d’ensemble — voyages par année et prochains départs',expanded=True):
-    years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
-    left,right=st.columns(2)
-    with left:
-        st.subheader('Voyages par année')
-        if years:st.bar_chart(pd.DataFrame({'Année':list(sorted(years)),'Voyages':[years[y] for y in sorted(years)]}).set_index('Année'))
-    with right:
-        st.subheader('Prochains départs')
-        upcoming=sorted([t for t in all_trips if str(t.get('start',''))>=date.today().isoformat() and t.get('kind') in ('future','scheduled')],key=lambda t:t['start'])[:8]
-        if not upcoming:st.info('Aucun départ daté à venir.')
-        for t in upcoming:st.write(f"{t.get('start')} — {t.get('name')}")
+for c,(icon,label,num,sub) in zip(mc,[('🌐','Voyages',len(all_trips),'enregistrés'),('📍','Villes',len({norm(p['destination']) for p in markers(all_trips)}),'destinations localisées'),('📷','Visités',count_past,'voyages réalisés'),('🎈','À venir',count_future,'voyages programmés')]):
+    with c:
+        st.markdown(f'<div class="tp-kpi"><span class="tp-icon">{icon}</span><div><strong>{num}</strong><b>{label}</b><br><small>{sub}</small></div></div>',unsafe_allow_html=True)
+years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
+left,right=st.columns(2)
+with left:
+    st.subheader('Voyages par année')
+    if years:
+        highest=max(years.values())
+        bars=''.join(f'<div class="tp-bar-wrap"><b>{years[y]}</b><div class="tp-bar" style="height:{max(3,round(years[y]/highest*155))}px"></div><span>{htmlsafe(y)}</span></div>' for y in sorted(years))
+        st.markdown('<div class="tp-panel"><div class="tp-bars">'+bars+'</div></div>',unsafe_allow_html=True)
+with right:
+    st.subheader('Prochains départs')
+    upcoming=sorted([t for t in all_trips if str(t.get('start',''))>=date.today().isoformat() and original_status(t)=='scheduled'],key=lambda t:t['start'])[:8]
+    if not upcoming: st.info('Aucun départ daté à venir.')
+    else:
+        rows=''.join(f'<div class="tp-depart">📍 <b>{htmlsafe(t.get("name",""))}</b> <small>— {htmlsafe(t.get("start",""))}</small></div>' for t in upcoming)
+        st.markdown('<div class="tp-panel">'+rows+'</div>',unsafe_allow_html=True)
+st.subheader('Répartition des destinations')
+country_counts=Counter(t.get('country','').strip() or 'Pays non renseigné' for t in all_trips)
+if country_counts:
+    st.bar_chart(pd.DataFrame([{'Pays':k,'Voyages':v} for k,v in country_counts.most_common(12)]).set_index('Pays'))
+st.caption('Les pays non renseignés dans les données ne sont pas devinés. Les statuts suivent la logique de la version locale.')
 
 tab_map,tab_list,tab_add,tab_import,tab_places=st.tabs(['🗺️ Carte','📋 Mes destinations','➕ Ajouter / modifier','📥 Import TXT','🏛️ Lieux à découvrir'])
 with tab_map:
     filt=st.selectbox('Afficher',['Tous','Effectués','À venir'])
-    subset=[x for x in st.session_state.trips if filt=='Tous' or x.get('kind')==('past' if filt=='Effectués' else 'future')]
+    subset=[x for x in st.session_state.trips if filt=='Tous' or original_status(x)==('past' if filt=='Effectués' else 'scheduled')]
     pts=markers(subset)
     st.write(f'{len(pts)} marqueurs pour {len(subset)} voyages (les étapes multi-villes peuvent produire plusieurs marqueurs).')
     if pts:
-        st.map(pd.DataFrame(pts),latitude='lat',longitude='lon',size=65)
+        m=folium.Map(location=[47.8,5.4],zoom_start=5,tiles='OpenStreetMap',control_scale=True)
+        colors={'past':'blue','scheduled':'orange','wish':'purple'}
+        for p in pts:
+            match=next((t for t in subset if t.get('name')==p['destination']),{})
+            folium.Marker([p['lat'],p['lon']],popup=folium.Popup(htmlsafe(p['destination']),max_width=260),tooltip=p['destination'],icon=folium.Icon(color=colors.get(original_status(match),'blue'),icon='info-sign')).add_to(m)
+        components.html(m.get_root().render(),height=560,scrolling=False)
     else: st.info('Aucune coordonnée disponible pour les destinations filtrées.')
     missing=[x.get('name','') for x in subset if not any(p['destination']==x.get('name','') for p in pts)]
     if missing:
@@ -187,7 +237,7 @@ with tab_map:
 with tab_list:
     query=st.text_input('Rechercher une destination')
     subset=[x for x in st.session_state.trips if norm(query) in norm(x.get('name',''))]
-    df=pd.DataFrame([{'Destination':x.get('name',''),'Pays':x.get('country',''),'Statut':'Effectué' if x.get('kind')=='past' else 'À venir','Début':x.get('start',''),'Fin':x.get('end',''),'Notes':x.get('notes','')} for x in subset])
+    df=pd.DataFrame([{'Destination':x.get('name',''),'Pays':x.get('country',''),'Statut':{'past':'Effectué','scheduled':'Programmé','wish':'Envie'}[original_status(x)],'Début':x.get('start',''),'Fin':x.get('end',''),'Notes':x.get('notes','')} for x in subset])
     st.dataframe(df,use_container_width=True,hide_index=True)
 with tab_add:
     trips=st.session_state.trips
@@ -197,7 +247,7 @@ with tab_add:
     with st.form('edit_trip'):
         name=st.text_input('Destination',value=old.get('name',''))
         country=st.text_input('Pays',value=old.get('country',''))
-        kind=st.selectbox('Statut',['past','future'],index=0 if old.get('kind','future')=='past' else 1,format_func=lambda x:'Effectué' if x=='past' else 'À venir')
+        kind=st.selectbox('Statut',['past','future','wish'],index={'past':0,'scheduled':1,'wish':2}[original_status(old)],format_func=lambda x:{'past':'Effectué','future':'À venir','wish':'Envie'}[x])
         start=st.text_input('Date de début (AAAA-MM-JJ ou texte)',value=old.get('start',''))
         end=st.text_input('Date de fin',value=old.get('end',''))
         notes=st.text_area('Notes',value=old.get('notes',''))
@@ -321,7 +371,7 @@ with t_route:
             missing=[n for n,c in located if not c]
             if missing:st.warning('Villes non localisées : '+', '.join(missing))
             else:
-                st.map(pd.DataFrame([{'lat':c[0],'lon':c[1]} for _,c in located]))
+                st.write('Étapes localisées : '+', '.join(n for n,_ in located))
                 st.write(' → '.join(stops));st.caption('Carte des étapes, sans calcul routier ni horaires de train vérifiés.')
                 st.download_button('⬇️ Exporter le circuit', '\n'.join(stops),file_name='circuit.txt')
 with t_ideas:
