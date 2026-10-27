@@ -349,11 +349,29 @@ try:
     symbol=weather_symbol(paris_weather.get('weather_code'))
 except Exception:
     temp='—';symbol='🌤️'
+# Fêtes et prénoms traditionnels français. Plusieurs calendriers peuvent différer.
+SAINTS_FR = {
+  '10-01':'Thérèse de l’Enfant-Jésus','10-02':'Léger','10-03':'Gérard','10-04':'François d’Assise',
+  '10-05':'Fleur','10-06':'Bruno','10-07':'Serge','10-08':'Pélagie','10-09':'Denis',
+  '10-10':'Ghislain','10-11':'Firmin','10-12':'Wilfried','10-13':'Géraud','10-14':'Juste',
+  '10-15':'Thérèse d’Avila','10-16':'Edwige','10-17':'Baudouin','10-18':'Luc',
+  '10-19':'René','10-20':'Adeline','10-21':'Céline','10-22':'Élodie','10-23':'Jean de Capistran',
+  '10-24':'Florentin','10-25':'Crépin','10-26':'Dimitri','10-27':'Émeline',
+  '10-28':'Simon et Jude','10-29':'Narcisse','10-30':'Bienvenue','10-31':'Quentin',
+  '11-01':'Toussaint','11-02':'Commémoration des défunts','11-03':'Hubert','11-04':'Charles',
+  '11-05':'Sylvie','11-06':'Bertille','11-07':'Carine','11-08':'Geoffroy','11-09':'Théodore',
+  '11-10':'Léon','11-11':'Martin','11-12':'Christian','11-13':'Brice','11-14':'Sidoine',
+  '11-15':'Albert','11-16':'Marguerite','11-17':'Élisabeth','11-18':'Aude',
+  '11-19':'Tanguy','11-20':'Edmond','11-21':'Présent. de Marie','11-22':'Cécile',
+  '11-23':'Clément','11-24':'Flora','11-25':'Catherine','11-26':'Delphine',
+  '11-27':'Séverin','11-28':'Jacques','11-29':'Saturnin','11-30':'André',
+}
+saints_json=json.dumps(SAINTS_FR,ensure_ascii=False)
 # Calendrier miniature intégré au bandeau : navigation locale sans rechargement Streamlit.
 calendar_events = {}
 for trip in all_trips:
     start = str(trip.get('start') or '')[:10]
-    if re.match(r'^\\d{4}-\\d{2}-\\d{2}$', start):
+    if re.match(r'^\d{4}-\d{2}-\d{2}$', start):
         calendar_events.setdefault(start, []).append(str(trip.get('name') or 'Voyage'))
 # Colorier aussi les journées intermédiaires des séjours datés.
 for trip in all_trips:
@@ -373,25 +391,43 @@ header_html=f"""<!doctype html><html lang='fr'><meta charset='utf-8'><style>
 .header{{background:linear-gradient(110deg,#102d51,#1b4773);border-radius:15px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;min-height:112px}}
 .brand{{font-size:23px;font-weight:800}}.brand small{{font-size:14px;color:#d5e8ff}}.sub{{font-size:12px;color:#d5e8ff;margin-top:5px}}
 .clockweather{{background:#f0f6ff;color:#102d51;padding:7px 14px;border-radius:12px;display:flex;gap:24px;align-items:center}}
-.clock{{font-size:24px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}}.small{{font-size:12px;color:#526a85}}.weather{{border-left:1px solid #c8d9eb;padding-left:20px;font-size:18px;font-weight:800}}
-.kpis{{display:flex;gap:7px;align-items:center;flex-wrap:wrap}}.kpi{{display:flex;align-items:center;gap:8px;background:#f4f8ff;color:#102d51;border-radius:10px;padding:9px 12px;min-width:100px}}.kpi-icon{{font-size:23px}}.kpi-num{{font-size:22px;font-weight:800;line-height:1}}.kpi-label{{font-size:11px;font-weight:700;margin-top:4px}}.mini-cal{{background:#f4f8ff;color:#15385e;border-radius:12px;padding:8px 10px;width:224px;flex-shrink:0}}.mini-cal-head{{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px;margin-bottom:5px}}.mini-cal-head button{{border:0;background:#dbeafe;border-radius:6px;cursor:pointer;padding:2px 8px;color:#17416b;font-size:15px}}.mini-cal-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}}.mini-cal-grid span{{font-size:10px;line-height:20px;min-height:20px;border-radius:5px}}.mini-cal-grid .dow{{color:#6884a4;font-weight:700}}.mini-cal-grid .has-trip{{background:#facc15!important;color:#713f12!important;font-weight:900;box-shadow:inset 0 0 0 1px #eab308}}.mini-cal-grid .today{{outline:2px solid #2683e8}}@media(max-width:850px){{.header{{padding:14px}}.brand{{font-size:21px}}.status{{display:none}}}}
+.clock{{font-size:24px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}}.small{{font-size:12px;color:#526a85}}.weather{{border-left:1px solid #c8d9eb;padding-left:20px;font-size:18px;font-weight:800}}.saint{{font-size:11px;color:#42658b;margin-top:4px;font-weight:600}}
+.kpis{{display:flex;gap:7px;align-items:center;flex-wrap:wrap}}.kpi{{display:flex;align-items:center;gap:8px;background:#f4f8ff;color:#102d51;border-radius:10px;padding:9px 12px;min-width:100px}}.kpi-icon{{font-size:23px}}.kpi-num{{font-size:22px;font-weight:800;line-height:1}}.kpi-label{{font-size:11px;font-weight:700;margin-top:4px}}.mini-cal{{background:#f4f8ff;color:#15385e;border-radius:12px;padding:8px 10px;width:224px;flex-shrink:0}}.mini-cal-head{{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px;margin-bottom:5px}}.mini-cal-head button{{border:0;background:#dbeafe;border-radius:6px;cursor:pointer;padding:2px 8px;color:#17416b;font-size:15px}}.mini-cal-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}}.mini-cal-grid span{{font-size:10px;line-height:20px;min-height:20px;border-radius:5px}}.mini-cal-grid .dow{{color:#6884a4;font-weight:700}}.mini-cal-grid .has-trip{{background:#facc15!important;color:#713f12!important;font-weight:900;box-shadow:inset 0 0 0 1px #eab308}}.mini-cal-grid .past{{background:#fee2e2;color:#b91c1c;font-weight:700}}.mini-cal-grid .has-trip{{background:#facc15!important;color:#713f12!important}}.mini-cal-grid .today{{outline:2px solid #2683e8}}@media(max-width:850px){{.header{{padding:14px}}.brand{{font-size:21px}}.status{{display:none}}}}
 </style><div class='header'><div><div class='brand'>Vue d’ensemble de mes voyages</div><div class='sub'>✈️ Travel Planner · Tableau de bord</div></div>
-<div class='clockweather'><div><div class='small' id='today'>Heure de France</div><div class='clock' id='clock'>--:--:--</div><div class='small'>🇫🇷 Europe/Paris</div></div><div class='weather'><div class='small'>Paris</div>{symbol} {temp}<div class='small'>Météo actuelle</div></div></div>
+<div class='clockweather'><div><div class='small' id='today'>Heure de France</div><div class='clock' id='clock'>--:--:--</div><div class='small'>🇫🇷 Europe/Paris</div></div><div class='weather'><div class='small'>Paris</div>{symbol} {temp}<div class='small'>Météo actuelle</div><div class='saint' id='saint'>📅 Saint du jour</div></div></div>
 <div class='kpis'>
 <div class='kpi'><span class='kpi-icon'>🌐</span><div><div class='kpi-num'>{len(all_trips)}</div><div class='kpi-label'>Voyages</div></div></div>
 <div class='kpi'><span class='kpi-icon'>📍</span><div><div class='kpi-num'>{len({norm(part) for t in all_trips for part in split_destinations(t.get('name','')) if norm(part) in coords()})}</div><div class='kpi-label'>Villes</div></div></div>
 <div class='kpi'><span class='kpi-icon'>📷</span><div><div class='kpi-num'>{count_past}</div><div class='kpi-label'>Visités</div></div></div>
 <div class='kpi'><span class='kpi-icon'>🎈</span><div><div class='kpi-num'>{count_future}</div><div class='kpi-label'>À venir</div></div></div>
 </div>
-<div class='mini-cal'><div class='mini-cal-head'><button onclick='moveMonth(-1)' aria-label='Mois précédent'>‹</button><span id='cal-month'>Calendrier</span><button onclick='moveMonth(1)' aria-label='Mois suivant'>›</button></div><div class='mini-cal-grid' id='cal-grid'></div></div>
+<div class='mini-cal'><div class='mini-cal-head'><button onclick='moveMonth(-1)' aria-label='Deux semaines précédentes'>‹</button><span id='cal-month'>Calendrier</span><button onclick='moveMonth(1)' aria-label='Deux semaines suivantes'>›</button></div><div class='mini-cal-grid' id='cal-grid'></div></div>
 </div>
 <script>
-const trips={calendar_events_json};const nowParis=new Date(new Date().toLocaleString('en-US',{{timeZone:'Europe/Paris'}}));let cy=nowParis.getFullYear(),cm=nowParis.getMonth();
-function moveMonth(delta){{let d=new Date(cy,cm+delta,1);cy=d.getFullYear();cm=d.getMonth();drawCalendar()}}
-function drawCalendar(){{document.getElementById('cal-month').textContent=new Intl.DateTimeFormat('fr-FR',{{month:'long',year:'numeric'}}).format(new Date(cy,cm,1));let g=document.getElementById('cal-grid');g.innerHTML='';for(let n of ['L','M','M','J','V','S','D']){{let e=document.createElement('span');e.className='dow';e.textContent=n;g.appendChild(e)}}let first=(new Date(cy,cm,1).getDay()+6)%7;let days=new Date(cy,cm+1,0).getDate();for(let k=0;k<first;k++)g.appendChild(document.createElement('span'));for(let day=1;day<=days;day++){{let e=document.createElement('span');let key=cy+'-'+String(cm+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');e.textContent=day;if(trips[key]){{e.classList.add('has-trip');e.title=trips[key].join(', ')}}if(cy===nowParis.getFullYear()&&cm===nowParis.getMonth()&&day===nowParis.getDate())e.classList.add('today');g.appendChild(e)}}}}drawCalendar();
-function tick(){{let d=new Date();document.getElementById('clock').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}}).format(d);document.getElementById('today').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'}}).format(d)}}tick();setInterval(tick,1000);</script></html>"""
+const trips={calendar_events_json};const saints={saints_json};
+const nowParis=new Date(new Date().toLocaleString('en-US',{{timeZone:'Europe/Paris'}}));
+let weekStart=new Date(nowParis.getFullYear(),nowParis.getMonth(),nowParis.getDate());
+weekStart.setDate(weekStart.getDate()-(weekStart.getDay()+6)%7);
+function moveMonth(delta){{weekStart.setDate(weekStart.getDate()+delta*14);drawCalendar()}}
+function drawCalendar(){{
+ let end=new Date(weekStart);end.setDate(end.getDate()+13);
+ const format=new Intl.DateTimeFormat('fr-FR',{{day:'numeric',month:'short'}});
+ document.getElementById('cal-month').textContent=format.format(weekStart)+' – '+format.format(end);
+ let g=document.getElementById('cal-grid');g.innerHTML='';
+ for(let n of ['L','M','M','J','V','S','D']){{let e=document.createElement('span');e.className='dow';e.textContent=n;g.appendChild(e)}}
+ for(let k=0;k<14;k++){{
+  let d=new Date(weekStart);d.setDate(d.getDate()+k);
+  let e=document.createElement('span');
+  let key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  e.textContent=d.getDate();
+  if(d.getTime()<new Date(nowParis.getFullYear(),nowParis.getMonth(),nowParis.getDate()).getTime())e.classList.add('past');if(trips[key]){{e.classList.add('has-trip');e.title=trips[key].join(', ')}}
+  if(key===nowParis.getFullYear()+'-'+String(nowParis.getMonth()+1).padStart(2,'0')+'-'+String(nowParis.getDate()).padStart(2,'0'))e.classList.add('today');
+  g.appendChild(e);
+ }}
+}}drawCalendar();
+function tick(){{let d=new Date();let md=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',month:'2-digit',day:'2-digit'}}).format(d).split('/');let saint=saints[md[1]+'-'+md[0]];document.getElementById('saint').textContent=saint?'🌼 Saint du jour : '+saint:'🌼 Saint du jour : à consulter';document.getElementById('clock').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}}).format(d);document.getElementById('today').textContent=new Intl.DateTimeFormat('fr-FR',{{timeZone:'Europe/Paris',weekday:'long',day:'numeric',month:'long',year:'numeric'}}).format(d)}}tick();setInterval(tick,1000);</script></html>"""
 if section == '📊 Tableau de bord':
-    components.html(header_html,height=205,scrolling=False)
+    components.html(header_html,height=150,scrolling=False)
     years=Counter(str(t.get('start',''))[:4] for t in all_trips if re.match(r'^\d{4}-',str(t.get('start',''))))
     left,right=st.columns(2)
     with left:
