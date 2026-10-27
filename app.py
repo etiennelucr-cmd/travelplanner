@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 import calendar
 import html
 import math
+import random
 import streamlit as st
 
 ROOT = Path(__file__).parent
@@ -290,7 +291,15 @@ def htmlsafe(value):
 
 with st.sidebar:
     st.markdown('## ✈️ Travel Planner')
-    section=st.radio('Navigation', ['📊 Tableau de bord','🗺️ Carte & voyages','🏛️ Visites','🌦️ Météo','💡 Idées'],label_visibility='collapsed',key='tp_navigation')
+    nav_items=['📊 Tableau de bord','🗺️ Carte & voyages','🏛️ Visites','🌦️ Météo','💡 Idées']
+    if st.session_state.get('tp_nav_selected') not in nav_items:
+        st.session_state['tp_nav_selected']=nav_items[0]
+    with st.container(key='tp_nav_buttons'):
+        for i, nav_name in enumerate(nav_items):
+            st.button(nav_name, key=f'tp_nav_btn_{i}', use_container_width=True,
+                      type='primary' if st.session_state['tp_nav_selected']==nav_name else 'secondary',
+                      on_click=lambda name=nav_name: st.session_state.update(tp_nav_selected=name))
+    section=st.session_state['tp_nav_selected']
     st.divider()
     st.caption('OUTILS & SAUVEGARDE')
     st.header('Sauvegarde et restauration')
@@ -346,6 +355,18 @@ for trip in all_trips:
     start = str(trip.get('start') or '')[:10]
     if re.match(r'^\\d{4}-\\d{2}-\\d{2}$', start):
         calendar_events.setdefault(start, []).append(str(trip.get('name') or 'Voyage'))
+# Colorier aussi les journées intermédiaires des séjours datés.
+for trip in all_trips:
+    start = str(trip.get('start') or '')[:10]
+    finish = str(trip.get('end') or '')[:10]
+    try:
+        d0, d1 = date.fromisoformat(start), date.fromisoformat(finish)
+        if d0 <= d1 and (d1-d0).days <= 60:
+            for offset in range((d1-d0).days+1):
+                key=(d0+timedelta(days=offset)).isoformat()
+                calendar_events.setdefault(key, []).append(str(trip.get('name') or 'Voyage'))
+    except (ValueError, TypeError):
+        pass
 calendar_events_json = json.dumps(calendar_events, ensure_ascii=False).replace('<', '\\u003c')
 header_html=f"""<!doctype html><html lang='fr'><meta charset='utf-8'><style>
 *{{box-sizing:border-box}}body{{margin:0;font-family:Arial,sans-serif;color:white}}
@@ -353,7 +374,7 @@ header_html=f"""<!doctype html><html lang='fr'><meta charset='utf-8'><style>
 .brand{{font-size:23px;font-weight:800}}.brand small{{font-size:14px;color:#d5e8ff}}.sub{{font-size:12px;color:#d5e8ff;margin-top:5px}}
 .clockweather{{background:#f0f6ff;color:#102d51;padding:7px 14px;border-radius:12px;display:flex;gap:24px;align-items:center}}
 .clock{{font-size:24px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}}.small{{font-size:12px;color:#526a85}}.weather{{border-left:1px solid #c8d9eb;padding-left:20px;font-size:18px;font-weight:800}}
-.kpis{{display:flex;gap:7px;align-items:center;flex-wrap:wrap}}.kpi{{display:flex;align-items:center;gap:8px;background:#f4f8ff;color:#102d51;border-radius:10px;padding:9px 12px;min-width:100px}}.kpi-icon{{font-size:23px}}.kpi-num{{font-size:22px;font-weight:800;line-height:1}}.kpi-label{{font-size:11px;font-weight:700;margin-top:4px}}.mini-cal{{background:#f4f8ff;color:#15385e;border-radius:12px;padding:8px 10px;width:224px;flex-shrink:0}}.mini-cal-head{{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px;margin-bottom:5px}}.mini-cal-head button{{border:0;background:#dbeafe;border-radius:6px;cursor:pointer;padding:2px 8px;color:#17416b;font-size:15px}}.mini-cal-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}}.mini-cal-grid span{{font-size:10px;line-height:20px;min-height:20px;border-radius:5px}}.mini-cal-grid .dow{{color:#6884a4;font-weight:700}}.mini-cal-grid .has-trip{{background:#f9bdc3;color:#7d2230;font-weight:800}}.mini-cal-grid .today{{outline:2px solid #2683e8}}@media(max-width:850px){{.header{{padding:14px}}.brand{{font-size:21px}}.status{{display:none}}}}
+.kpis{{display:flex;gap:7px;align-items:center;flex-wrap:wrap}}.kpi{{display:flex;align-items:center;gap:8px;background:#f4f8ff;color:#102d51;border-radius:10px;padding:9px 12px;min-width:100px}}.kpi-icon{{font-size:23px}}.kpi-num{{font-size:22px;font-weight:800;line-height:1}}.kpi-label{{font-size:11px;font-weight:700;margin-top:4px}}.mini-cal{{background:#f4f8ff;color:#15385e;border-radius:12px;padding:8px 10px;width:224px;flex-shrink:0}}.mini-cal-head{{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:12px;margin-bottom:5px}}.mini-cal-head button{{border:0;background:#dbeafe;border-radius:6px;cursor:pointer;padding:2px 8px;color:#17416b;font-size:15px}}.mini-cal-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}}.mini-cal-grid span{{font-size:10px;line-height:20px;min-height:20px;border-radius:5px}}.mini-cal-grid .dow{{color:#6884a4;font-weight:700}}.mini-cal-grid .has-trip{{background:#facc15!important;color:#713f12!important;font-weight:900;box-shadow:inset 0 0 0 1px #eab308}}.mini-cal-grid .today{{outline:2px solid #2683e8}}@media(max-width:850px){{.header{{padding:14px}}.brand{{font-size:21px}}.status{{display:none}}}}
 </style><div class='header'><div><div class='brand'>Vue d’ensemble de mes voyages</div><div class='sub'>✈️ Travel Planner · Tableau de bord</div></div>
 <div class='clockweather'><div><div class='small' id='today'>Heure de France</div><div class='clock' id='clock'>--:--:--</div><div class='small'>🇫🇷 Europe/Paris</div></div><div class='weather'><div class='small'>Paris</div>{symbol} {temp}<div class='small'>Météo actuelle</div></div></div>
 <div class='kpis'>
@@ -379,6 +400,33 @@ if section == '📊 Tableau de bord':
             highest=max(years.values())
             bars=''.join(f'<div class="tp-bar-wrap"><b>{years[y]}</b><div class="tp-bar" style="height:{max(3,round(years[y]/highest*155))}px"></div><span>{htmlsafe(y)}</span></div>' for y in sorted(years))
             st.markdown('<div class="tp-panel"><div class="tp-bars">'+bars+'</div></div>',unsafe_allow_html=True)
+        st.subheader('Répartition des destinations')
+        # Une étape multi-villes compte pour chaque ville ; les inconnues restent hors graphique.
+        country_counts=Counter()
+        unknown_countries=[]
+        for trip in all_trips:
+            parts=split_destinations(trip.get('name',''))
+            for part in parts:
+                country=country_for(part,trip.get('country',''))
+                if country:country_counts[country]+=1
+                else:unknown_countries.append(part)
+        if unknown_countries:
+            country_counts['Pays à préciser'] += len(unknown_countries)
+        if country_counts:
+            colors=['#1976d2','#ff8229','#f2b900','#21ad85','#7157eb','#ff5c7a','#a5b7d0','#5d8ad5','#e8a5b8','#94a3b8']
+            identified=[(k,v) for k,v in country_counts.most_common() if k!='Pays à préciser']
+            pairs=identified[:7]
+            if len(identified)>7:pairs.append(('Autres',sum(v for _,v in identified[7:])))
+            if country_counts.get('Pays à préciser'):pairs.append(('Pays à préciser',country_counts['Pays à préciser']))
+            total=sum(country_counts.values());cur=0;stops=[];legend=[]
+            for i,(country,n) in enumerate(pairs):
+                pct=100*n/total
+                stops.append(f'{colors[i%len(colors)]} {cur:.3f}% {cur+pct:.3f}%');cur+=pct
+                legend.append(f'<div class="tp-legend-item"><span class="tp-dot" style="background:{colors[i%len(colors)]}"></span>{safe(country)} <b>{n}</b> ({pct:.0f}%)</div>')
+            donut=f'<div class="tp-donut" style="background:conic-gradient({",".join(stops)})"><div class="tp-donut-center"><b>{total}</b><small>destinations</small></div></div>'
+            st.markdown('<div class="tp-panel"><div class="tp-country-layout">'+donut+'<div class="tp-legend">'+''.join(legend)+'</div></div></div>',unsafe_allow_html=True)
+        if unknown_countries:
+            st.caption(f'{len(unknown_countries)} destination(s) sans pays identifié, affichées dans « Pays à préciser ». Total préservé, aucun pays inventé et aucune donnée Supabase modifiée.')
     with right:
         st.subheader('Prochains départs')
         upcoming=sorted([t for t in all_trips if str(t.get('start',''))>=date.today().isoformat() and original_status(t)=='scheduled'],key=lambda t:t['start'])[:8]
@@ -398,33 +446,6 @@ if section == '📊 Tableau de bord':
                 else: weather_note=' · météo à venir (prévisions non disponibles)'
                 rows+=f'<div class="tp-depart"><span class="tp-flag">{flag_for(t)}</span><div><b>{safe(t.get("name",""))}</b><br><small>{dt.strftime("%d/%m/%Y")}{safe(weather_note)}</small></div><span class="tp-when">{badge}</span></div>'
             st.markdown('<div class="tp-panel">'+rows+'</div>',unsafe_allow_html=True)
-    st.subheader('Répartition des destinations')
-    # Une étape multi-villes compte pour chaque ville ; les inconnues restent hors graphique.
-    country_counts=Counter()
-    unknown_countries=[]
-    for trip in all_trips:
-        parts=split_destinations(trip.get('name',''))
-        for part in parts:
-            country=country_for(part,trip.get('country',''))
-            if country:country_counts[country]+=1
-            else:unknown_countries.append(part)
-    if unknown_countries:
-        country_counts['Pays à préciser'] += len(unknown_countries)
-    if country_counts:
-        colors=['#1976d2','#ff8229','#f2b900','#21ad85','#7157eb','#ff5c7a','#a5b7d0','#5d8ad5','#e8a5b8','#94a3b8']
-        identified=[(k,v) for k,v in country_counts.most_common() if k!='Pays à préciser']
-        pairs=identified[:7]
-        if len(identified)>7:pairs.append(('Autres',sum(v for _,v in identified[7:])))
-        if country_counts.get('Pays à préciser'):pairs.append(('Pays à préciser',country_counts['Pays à préciser']))
-        total=sum(country_counts.values());cur=0;stops=[];legend=[]
-        for i,(country,n) in enumerate(pairs):
-            pct=100*n/total
-            stops.append(f'{colors[i%len(colors)]} {cur:.3f}% {cur+pct:.3f}%');cur+=pct
-            legend.append(f'<div class="tp-legend-item"><span class="tp-dot" style="background:{colors[i%len(colors)]}"></span>{safe(country)} <b>{n}</b> ({pct:.0f}%)</div>')
-        donut=f'<div class="tp-donut" style="background:conic-gradient({",".join(stops)})"><div class="tp-donut-center"><b>{total}</b><small>villes identifiées</small></div></div>'
-        st.markdown('<div class="tp-panel"><div class="tp-country-layout">'+donut+'<div class="tp-legend">'+''.join(legend)+'</div></div></div>',unsafe_allow_html=True)
-    if unknown_countries:
-        st.caption(f'{len(unknown_countries)} destination(s) sans pays identifié, affichées dans « Pays à préciser ». Total préservé, aucun pays inventé et aucune donnée Supabase modifiée.')
 
 if section == '🗺️ Carte & voyages':
     tab_map,tab_list,tab_add,tab_import,tab_places=st.tabs(['🗺️ Carte','📋 Mes destinations','➕ Ajouter / modifier','📥 Import TXT','🏛️ Lieux à découvrir'])
@@ -534,17 +555,38 @@ if section == '💡 Idées':
     st.caption('Des villes nouvelles inspirées des pays où tu as déjà voyagé, sans doublons avec tes destinations enregistrées.')
     catalog=read_json(ROOT/'data'/'europe-cities.json',{})
     visited_countries=Counter(country_for(part,t.get('country','')) for t in all_trips for part in split_destinations(t.get('name','')) if original_status(t)=='past')
-    suggested_countries=[c for c,_ in visited_countries.most_common() if c in catalog]
-    choices=['🌟 Suggestions selon mes voyages']+sorted(catalog)
-    selection=st.selectbox('Découvrir',choices,key='ideacountry')
-    country=(suggested_countries[0] if suggested_countries else 'France') if selection==choices[0] else selection
-    if selection==choices[0]: st.caption('Suggestions inspirées de tes pays déjà visités. Choisis un pays pour affiner.')
+    # Un véritable mélange de destinations de plusieurs pays, pas seulement du pays le plus fréquent.
     existing={norm(part) for t in all_trips for part in split_destinations(t.get('name',''))}
-    suggestions=[city for city in catalog.get(country,[]) if norm(city) not in existing]
-    st.write(f'**{len(suggestions)} idées** à découvrir en {country} {COUNTRY_FLAGS.get(country,"🌍")}')
+    available=[(country,city) for country,cities in catalog.items() for city in cities
+               if norm(city) not in existing and country_for(city,country)==country]
+    countries_with_trips={c for c in visited_countries if c}
+    choices=['🎲 Toutes les destinations inédites','🌍 Pays déjà visités']+sorted(catalog)
+    selection=st.selectbox('Découvrir',choices,key='ideacountry')
+    if selection==choices[1]:
+        pool=[(country,city) for country,city in available if country in countries_with_trips]
+    elif selection==choices[0]:
+        pool=available
+    else:
+        pool=[(country,city) for country,city in available if country==selection]
+    if 'idea_shuffle_seed' not in st.session_state:
+        st.session_state.idea_shuffle_seed=random.randrange(1,10**9)
+    if st.button('🎲 Mélanger les suggestions',key='shuffle_ideas'):
+        st.session_state.idea_shuffle_seed=random.randrange(1,10**9)
+    rng=random.Random(st.session_state.idea_shuffle_seed)
+    rng.shuffle(pool)
+    # Répartir les pays pour éviter un bloc de suggestions uniquement françaises.
+    by_country={}
+    for c,city in pool:by_country.setdefault(c,[]).append((c,city))
+    country_order=list(by_country)
+    rng.shuffle(country_order)
+    suggestions=[]
+    while any(by_country.values()) and len(suggestions)<36:
+        for c in country_order:
+            if by_country[c] and len(suggestions)<36:suggestions.append(by_country[c].pop())
+    st.write(f'**{len(pool)} destinations inédites possibles** · {len(suggestions)} suggestions affichées, de plusieurs pays')
     for offset in range(0,min(len(suggestions),40),3):
         cols=st.columns(3)
-        for col,cityname in zip(cols,suggestions[offset:offset+3]):
+        for col,(country,cityname) in zip(cols,suggestions[offset:offset+3]):
             with col:
                 photo=city_photo(cityname)
                 picture=f'<img src="{safe(photo)}" alt="Vue de {safe(cityname)}" class="tp-city-photo">' if photo else '<div class="tp-city-placeholder">✈️ Découvrir</div>'
@@ -552,6 +594,32 @@ if section == '💡 Idées':
                 if st.button('♡ Ajouter à mes envies',key='idea_'+country+'_'+cityname):
                     item={'id':str(uuid.uuid4()),'name':cityname,'country':country,'kind':'wish','start':'','end':'','notes':'Idée de destination','lat':None,'lon':None}
                     upsert_trips([item]);st.session_state.trips.append(item);st.rerun()
+
+def walking_estimate(a,b):
+    try:
+        lat1,lon1,lat2,lon2=map(float,(a['lat'],a['lon'],b['lat'],b['lon']))
+        dlat=math.radians(lat2-lat1);dlon=math.radians(lon2-lon1)
+        h=math.sin(dlat/2)**2+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.sin(dlon/2)**2
+        km=6371*2*math.asin(min(1,math.sqrt(h)))
+        return max(2,round(km*1.3/4.5*60))
+    except (KeyError,ValueError,TypeError,OverflowError):return None
+
+@st.cache_data(ttl=86400,show_spinner=False)
+def station_coordinates(city,country):
+    # Géocodage ciblé de la gare, pas une position inventée au centre-ville.
+    from urllib.parse import urlencode
+    query=f'gare centrale {city}, {country}'
+    try:
+        url='https://nominatim.openstreetmap.org/search?'+urlencode({'q':query,'format':'json','limit':1})
+        req=Request(url,headers={'User-Agent':'TravelPlannerPersonal/6.9 (streamlit travel itinerary)'})
+        with urlopen(req,timeout=6) as r:items=json.load(r)
+        if items:
+            item=items[0]
+            # Ne pas considérer un résultat géocodé arbitraire comme une gare certaine.
+            if any(word in norm(item.get('display_name','')) for word in ['gare','station','bahnhof','stazione','estacion']):
+                return {'lat':float(item['lat']),'lon':float(item['lon']),'name':item.get('display_name','Gare').split(',')[0]}
+    except Exception:pass
+    return None
 
 if section == '🏛️ Visites':
     st.subheader('🏛️ Mon programme de visites')
@@ -564,20 +632,39 @@ if section == '🏛️ Visites':
     results=places.get(norm(city),[])
     if results:
         n={'30 min':2,'1 h':3,'2 h':5,'4 h':8,'1 jour':12,'2 jours':20,'3 jours':30}[duration]
-        names=[e.get('tags',{}).get('name','Lieu sans nom') for e in results[:n]]
+        selected=results[:n]
+        names=[e.get('tags',{}).get('name','Lieu sans nom') for e in selected]
+        station=station_coordinates(city,country)
+        walking_total=0
+        segments=[]
+        if station:
+            st.markdown(f'**🚉 Départ : {safe(station["name"])}**')
+            minutes=walking_estimate(station,selected[0])
+            if minutes is not None:
+                walking_total+=minutes
+                segments.append(f'Gare → 1. {names[0]} : ~{minutes} min')
+                st.info(f'🚶 Gare → étape 1 : environ {minutes} min à pied')
+            else:
+                st.warning('Trajet depuis la gare non calculable.')
+        else:
+            st.warning('Gare non identifiée de façon fiable : départ depuis la gare à confirmer. Le total exclut ce premier trajet.')
         for i,name in enumerate(names,1):
             if i>1:
-                a,b=results[i-2],results[i-1]
-                try:
-                    lat1,lon1,lat2,lon2=map(float,(a['lat'],a['lon'],b['lat'],b['lon']))
-                    dlat=math.radians(lat2-lat1);dlon=math.radians(lon2-lon1)
-                    h=math.sin(dlat/2)**2+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.sin(dlon/2)**2
-                    km=6371*2*math.asin(min(1,math.sqrt(h)))
-                    minutes=max(2,round(km*1.3/4.5*60))
-                    st.caption(f'🚶 Étape {i-1} → {i} : environ {minutes} min à pied (estimation à vol d’oiseau × 1,3 ; trajet réel non vérifié)')
-                except (KeyError,ValueError,TypeError): st.caption(f'🚶 Étape {i-1} → {i} : trajet à vérifier sur une carte')
+                minutes=walking_estimate(selected[i-2],selected[i-1])
+                if minutes is not None:
+                    walking_total+=minutes
+                    segments.append(f'{i-1}. {names[i-2]} → {i}. {name} : ~{minutes} min')
+                    st.caption(f'🚶 Étape {i-1} → {i} : environ {minutes} min à pied')
+                else:
+                    st.caption(f'🚶 Étape {i-1} → {i} : trajet à vérifier sur une carte')
             st.markdown(f'<div class="tp-idea" style="min-height:0;margin:7px 0"><b>{i:02d} · {safe(name)}</b><p>📍 {safe(city)} · {safe(country)} · étape proposée</p></div>',unsafe_allow_html=True)
-        st.download_button('⬇️ Exporter mon programme (TXT)',f'Programme de visites — {city} ({duration})\n\n'+'\n'.join(f'{i}. {name}' for i,name in enumerate(names,1)),file_name='programme-visites.txt')
+        st.metric('🚶 Total des déplacements à pied estimés',f'{walking_total//60} h {walking_total%60:02d} min' if walking_total>=60 else f'{walking_total} min')
+        st.caption('Estimation à vol d’oiseau × 1,3, vitesse 4,5 km/h. Ni itinéraire piéton réel, ni temps de visite, ni pauses. Le trajet de la gare est inclus uniquement si sa position est identifiée.')
+        export=f'Programme de visites — {city} ({duration})\\n\\n'
+        export+=('Départ : '+station['name']+'\\n' if station else 'Gare de départ à confirmer\\n')
+        export+='\\n'.join(f'{i}. {name}' for i,name in enumerate(names,1))
+        export+='\\n\\nDéplacements estimés :\\n'+'\\n'.join(segments)+f'\\nTOTAL MARCHE : {walking_total} minutes (indicatif, hors visites)'
+        st.download_button('⬇️ Exporter mon programme (TXT)',export,file_name='programme-visites.txt')
     else:
         st.info(f'Aucun lieu détaillé en cache pour {city}. Tu peux consulter « Lieux à découvrir » pour les villes déjà enregistrées dans le catalogue local.')
 
@@ -614,3 +701,19 @@ section[data-testid="stSidebar"] div[role="radiogroup"] > label p{
 }
 section[data-testid="stSidebar"] div[data-testid="stRadio"]{width:100%!important}
 </style>''',unsafe_allow_html=True)
+
+st.markdown("""<style>
+/* Navigation : vrais boutons Streamlit, même largeur et sans radio. */
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons {width:100%!important}
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons [data-testid="stButton"] {width:100%!important}
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons [data-testid="stButton"] button {
+ width:100%!important;min-height:47px!important;height:47px!important;
+ justify-content:flex-start!important;text-align:left!important;
+ border:0!important;border-radius:10px!important;padding:0 14px!important;
+ font-weight:600!important;font-size:14px!important;
+}
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons [data-testid="stButton"] button[kind="secondary"] {background:#254b6d!important;color:#fff!important}
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons [data-testid="stButton"] button[kind="primary"] {background:#087bce!important;color:#fff!important}
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons [data-testid="stButton"] button:hover {filter:brightness(1.14)}
+section[data-testid="stSidebar"] .st-key-tp_nav_buttons [data-testid="stVerticalBlock"] {gap:8px!important}
+</style>""",unsafe_allow_html=True)
